@@ -36,8 +36,10 @@ router.get(`/${API}/flightavailabilities`, async (req, res) => {
     const response = await amadeus.shopping.flightOffersSearch.get({
       originLocationCode: 'CCU',
       destinationLocationCode: 'DEL',
-      departureDate: '2024-07-18', // Corrected date format
-      adults: 1
+      departureDate: '2024-07-20', // Corrected date format
+      adults: 1,
+      children:2,
+      infants:0
     });
 
     res.json(response.data);

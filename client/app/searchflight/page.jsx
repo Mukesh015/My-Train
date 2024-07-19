@@ -96,8 +96,8 @@ const SearchRoot = () => {
         <div className="relative flex justify-end h-screen">
           <div className="absolute bottom-48 left-10 w-auto h-auto bg-lime-400 p-4">
             <div className="flex justify-around">
-              <p className="mt-2">From:</p>
-              <p className="mt-2">TO:</p>
+              <p className="mt-2 font-serif font-normal text-xl">From:</p>
+              <p className="mt-2 font-serif font-normal text-xl">TO:</p>
             </div>
             <div className="flex justify-around items-center">
               <SearchAutocomplete search={search} setSearch={setSearch} />
@@ -118,7 +118,7 @@ const SearchRoot = () => {
                 <div style={{ backgroundColor: "#FFFFFF", padding: "10px", borderRadius: "8px" }}>
 
                   <div>
-                    <Traveller />
+                  <Traveller setIsTraveller={setIsTraveller} />
                   </div>
 
                 </div>
