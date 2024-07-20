@@ -31,7 +31,7 @@ const Traveller: React.FC<TravellerProps> = ({ setIsTraveller }) => {
             ].map((category, idx) => (
                 <div key={idx} className="flex justify-around mt-6">
                     <div>
-                        <p className="font-serif font-normal">{category.title}</p>
+                        <p className="font-serif font-normal dark">{category.title}</p>
                         <p>{category.age}</p>
                     </div>
                     <div className="flex items-center ml-8">
