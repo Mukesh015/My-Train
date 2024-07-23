@@ -5,12 +5,15 @@ import bodyParser from 'body-parser';
 import dotenv from "dotenv";
 import path from "path";
 dotenv.config({ path: "./.env" });
-import router from "./routes/flight"
+import router from "../routes/flight"
+import home from "../routes/home";
+import gettrain from "../routes/getTrains";
+
 async function init() {
 
     const PORT: string | undefined = process.env.PORT;
 
-    if ( !PORT) {
+    if (!PORT) {
         console.error("Environment variables and PORT must be provided.");
         return;
     }
@@ -21,7 +24,9 @@ async function init() {
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(bodyParser.json());
-    app.use("/",router)
+    app.use("/flight", router)
+    app.use("/", home);
+    app.use("/trains", gettrain);
 
     app.listen(PORT, () => {
         console.log(`server is running on http://localhost:${PORT}`);

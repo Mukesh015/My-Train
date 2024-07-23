@@ -82,7 +82,7 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
 
 
     return (
-        <div className=''>
+        <div className='h-screen bg-black'>
             <ToastContainer />
             <NavbarSlug SourceCode={sourceCode} DestinationCode={destinationCode} selectedDate={selectedDate} adults={adults} children={children} infants={infants} onModifySearchChange={handleModify} />
             {isOpenModifySearch && (
@@ -90,6 +90,7 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
                     <FlightModifySearch />
                 </div>
             )}
+      
         </div>
     );
 };
