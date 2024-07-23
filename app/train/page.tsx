@@ -69,9 +69,8 @@ export default function TrainPage() {
     const handleConcessionCheckBox = () => {
         setConcesssionCheckBox(!concesssionCheckBox);
     }
-
     const handleSearchTrain = () => {
-        router.push(`/trainresult/alltrains/search?from=${fromStation}&to=${toStation}`)
+        router.push(`/trainresult/alltrains/search?from=${fromStation}&to=${toStation}&date=${date}`)
     }
 
 
@@ -107,7 +106,6 @@ export default function TrainPage() {
                                 <p className="mt-4">Choose date</p>
                                 <div className="flex w-full flex-wrap items-end md:flex-nowrap md:mb-0">
                                     <DatePicker
-                                        // defaultValue={(Date.now())}
                                         value={date}
                                         onChange={setDate}
                                         label={"Train date"}
