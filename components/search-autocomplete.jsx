@@ -11,11 +11,12 @@ const SearchAutocomplete = (props) => {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const [search, setSearch] = React.useState('')
+  const { airportCode, setAirportCode } = props;
   const [keyword, setKeyword] = React.useState('')
   const [loading, setLoading] = React.useState(false)
 
   // Configure options format for proper displaying on the UI
-  const names = options.map(i => ({ type: i.subType, name: i.name }));
+  const names = options.map(i => ({ type: i.subType, name: i.name,airportCode: i.iataCode }));
 
   // Debounce func prevents extra unwanted keystrokes, when user triggers input events 
   const debounceLoadData = useCallback(debounce(setKeyword, 1000), []);
@@ -26,7 +27,7 @@ const SearchAutocomplete = (props) => {
 
   // Same example as in *SearchRoot* component
   React.useEffect(() => {
-
+     
     setLoading(true)
     const { out, source } = getAmadeusData({ ...props.search, page: 0, keyword });
 
@@ -70,13 +71,13 @@ const SearchAutocomplete = (props) => {
         }
         onChange={(e, value) => {
           if (value && value.name) {
-            props.setSearch((p) => ({ ...p, keyword: value.name, page: 0 }))
-            setSearch(value.name)
+            props.setSearch((p) => ({ ...p, keyword: value.name, page: 0 }));
+            setSearch(value.name);
+            setAirportCode(value.airportCode); // Set the airport code here
             return;
           }
-          setSearch("")
-          props.setSearch((p) => ({ ...p, keyword: "a", page: 0 }))
-
+          setSearch("");
+          props.setSearch((p) => ({ ...p, keyword: "a", page: 0 }));
         }}
         getOptionLabel={option => {
           return option.name;

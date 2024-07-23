@@ -31,13 +31,16 @@ router.get(`/${API}/airports`, async (req, res) => {
 });
 
 // Endpoint for flight availability search
-router.get(`/${API}/flightavailabilities`, async (req, res) => {
+router.post(`/${API}/flightavailabilities`, async (req, res) => {
+  const {sourceCode, destinationCode,selectedDate,adult,children,infants}=req.body;
   try {
     const response = await amadeus.shopping.flightOffersSearch.get({
-      originLocationCode: 'CCU',
-      destinationLocationCode: 'DEL',
-      departureDate: '2024-07-18', // Corrected date format
-      adults: 1
+      originLocationCode: sourceCode,
+      destinationLocationCode: destinationCode,
+      departureDate: selectedDate, 
+      adults: adult,
+      children:children,
+      infants:infants
     });
 
     res.json(response.data);

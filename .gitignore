@@ -14,11 +14,11 @@
 /build
 
 /.next
-
+/server/.env
 # server
 /server/node_modules
 /server/.env
-
+/server/build
 # misc
 .DS_Store
 *.pem
