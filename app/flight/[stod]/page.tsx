@@ -4,6 +4,8 @@ import { Slide, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { NavbarSlug } from "@/components/navbarSlug"
 import { FlightModifySearch } from '@/components/flightModifySearch'
+import dynamic from "next/dynamic";
+
 
 interface Props {
     params: {
@@ -82,7 +84,7 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
 
 
     return (
-        <div className=''>
+        <div className='h-screen bg-black'>
             <ToastContainer />
             <NavbarSlug SourceCode={sourceCode} DestinationCode={destinationCode} selectedDate={selectedDate} adults={adults} children={children} infants={infants} onModifySearchChange={handleModify} />
             {isOpenModifySearch && (
