@@ -10,7 +10,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Lottie from 'react-lottie';
 import { useSelector } from 'react-redux';
-import animationData from '@/lottie/Animation - 1721473491071.json'
+import * as animationData from '@/lottie/Animation - 1721473491071.json'
 import { useRouter } from "next/navigation"
 import Navbar from "@/components/navbar";
 
@@ -21,7 +21,7 @@ const SearchRoot = () => {
 
   const defaultOptions = {
     loop: true,
-    autoplay: true,
+    autoplay: true, 
     animationData: animationData,
     rendererSettings: {
       preserveAspectRatio: 'xMidYMid slice'

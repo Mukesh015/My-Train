@@ -60,7 +60,7 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            setIsOpenModifySearch(true);
+            // setIsOpenModifySearch(true);
             if (ref.current && !ref.current.contains(event.target as Node) ) {
                 setIsOpenModifySearch(false);
 
@@ -82,7 +82,7 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
 
 
     return (
-        <div>
+        <div className=''>
             <ToastContainer />
             <NavbarSlug SourceCode={sourceCode} DestinationCode={destinationCode} selectedDate={selectedDate} adults={adults} children={children} infants={infants} onModifySearchChange={handleModify} />
             {isOpenModifySearch && (

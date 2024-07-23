@@ -1,7 +1,11 @@
+"use client"
+
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import Navbar from "@/components/navbar";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   return (
     <>
       <div className="font-Montserrat h-screen w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased">
@@ -26,6 +30,7 @@ export default function Home() {
                 className="absolute flex items-center justify-center text-white z-[1] opacity-90 rounded-2xl inset-0.5 bg-black"
               >
                 <button
+                onClick={()=>router.push("/train")}
                   name="text"
                   className="items-center flex input font-semibold text-lg h-full opacity-90 w-full px-14 py-3 rounded-xl bg-black"
                 >
