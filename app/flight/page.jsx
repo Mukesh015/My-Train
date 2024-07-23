@@ -107,7 +107,7 @@ const SearchRoot = () => {
             isClickToPauseDisabled
           />
         </div>
-        <div className="relative flex justify-end h-screen">
+        <div className="relative flex justify-end h-screen font-serif text-black">
           <div className="absolute bottom-32 left-10 w-auto h-auto bg-lime-400 p-4 rounded-lg">
             <div className="flex justify-around">
               <p className="mt-2 font-serif font-normal text-xl">From:</p>
