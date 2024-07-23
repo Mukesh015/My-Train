@@ -8,10 +8,11 @@ export default function Navbar() {
         <>
             <nav className="fixed top-2 z-50 font-Montserrat">
                 <ul className="flex items-center p-3">
-                    <li>
+                    <li className="flex items-center justify-center'">
                         <img className="rounded-full" height={50} width={50} src="https://99designs-blog.imgix.net/blog/wp-content/uploads/2022/05/Mastercard_2019_logo.svg-e1659036851269.png?auto=format&q=60&fit=max&w=930" alt="" />
+                        <p className="font-bold ml-5 text-xl">TOURISM</p>
                     </li>
-                    <ul className="flex mr-20 ml-80">
+                    <ul className="flex mr-20 ml-64">
                         <li onClick={()=>router.push("/")} className="text-rose-500 cursor-pointer">
                             <p className="text-lg m-6 group relative w-max">
                                 <span className="flex items-center">

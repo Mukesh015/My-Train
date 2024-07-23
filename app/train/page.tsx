@@ -1,11 +1,15 @@
 "use client";
 import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "@/components/navbar";
 import { Checkbox } from "@nextui-org/react"
 import { DatePicker } from "@nextui-org/react";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import { LayoutGrid } from "@/components/ui/layout-grid"
+import { DateValue, parseDate, getLocalTimeZone } from "@internationalized/date";
+import { useDateFormatter } from "@react-aria/i18n";
+import { useRouter } from "next/navigation";
+
 export default function TrainPage() {
     const placeholder1 = [
         "New Delhi", "Durgapur", "Bankura", "Asansole", "Howrah", "Sealdah", "Mumbai CSMT", "Shalimar", "Ranchi", "Kharagpur",
@@ -39,17 +43,41 @@ export default function TrainPage() {
         },
     ];
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value);
-    };
+    const router = useRouter();
+    const [fromStation, setFromStation] = useState<string | null>(null);
+    const [toStation, setToStation] = useState<string | null>(null);
+    const [date, setDate] = React.useState<DateValue>(parseDate(new Date().toISOString().split('T')[0]));
+    const [disabilityCheckBox, setDisabilityCheckBox] = useState<boolean>(false);
+    const [berthAvailabilityCheckBox, setBerthAvailabilityCheckBox] = useState<boolean>(false);
+    const [dateFlexibleCheckBox, setDateFlexibleCheckBox] = useState<boolean>(false);
+    const [concesssionCheckBox, setConcesssionCheckBox] = useState<boolean>(false);
+    let formatter = useDateFormatter({ dateStyle: "full" });
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("submitted");
+        console.log("Deleted");
     };
+    const handleDisabilityCheckBox = () => {
+        setDisabilityCheckBox(!disabilityCheckBox);
+    }
+    const handleBerthAvailabilityCheckBox = () => {
+        setBerthAvailabilityCheckBox(!berthAvailabilityCheckBox);
+    }
+    const handleDateFlexibleCheckBox = () => {
+        setDateFlexibleCheckBox(!dateFlexibleCheckBox);
+    }
+    const handleConcessionCheckBox = () => {
+        setConcesssionCheckBox(!concesssionCheckBox);
+    }
+
+    const handleSearchTrain = () => {
+        router.push(`/trainresult/alltrains/search?from=${fromStation}&to=${toStation}`)
+    }
+
+
     return (
         <>
-            <main className="font-Montserrat bg-[#000435] h-screen">
+            <main className="font-Montserrat bg-[#000435] pb-[1px]">
                 <header className="ml-14">
                     <Navbar />
                 </header>
@@ -59,7 +87,7 @@ export default function TrainPage() {
                             <p>From</p>
                             <PlaceholdersAndVanishInput
                                 placeholders={placeholder1}
-                                onChange={handleChange}
+                                onChange={(e) => setFromStation(e.target.value)}
                                 onSubmit={onSubmit}
                             />
                         </div>
@@ -70,7 +98,7 @@ export default function TrainPage() {
                             <p>To</p>
                             <PlaceholdersAndVanishInput
                                 placeholders={placeholder2}
-                                onChange={handleChange}
+                                onChange={(e) => setToStation(e.target.value)}
                                 onSubmit={onSubmit}
                             />
                         </div>
@@ -79,40 +107,47 @@ export default function TrainPage() {
                                 <p className="mt-4">Choose date</p>
                                 <div className="flex w-full flex-wrap items-end md:flex-nowrap md:mb-0">
                                     <DatePicker
+                                        // defaultValue={(Date.now())}
+                                        value={date}
+                                        onChange={setDate}
                                         label={"Train date"}
                                         className="max-w-[284px]"
                                         labelPlacement="outside"
                                     />
+                                    <p className="text-sm ml-3 text-gray-500">
+                                        Selected date: {date ? formatter.format(date.toDate(getLocalTimeZone())) : "--"}
+                                    </p>
                                 </div>
                             </div>
                         </div>
                         <div className="mt-10 ml-5 space-y-3">
                             <p>
                                 <span>
-                                    <Checkbox className="text-rose-500" defaultSelected color="warning"></Checkbox>
+                                    <Checkbox onClick={() => handleDisabilityCheckBox()} isSelected={disabilityCheckBox} className="text-rose-500" defaultSelected color="warning"></Checkbox>
                                 </span>
                                 <span>Person with disability concession</span>
                             </p>
                             <p>
                                 <span>
-                                    <Checkbox className="text-rose-500" defaultSelected color="warning"></Checkbox>
+                                    <Checkbox onClick={() => handleDateFlexibleCheckBox()} isSelected={dateFlexibleCheckBox} className="text-rose-500" defaultSelected color="warning"></Checkbox>
                                 </span>
                                 <span>Flexible with date</span>
                             </p>
                             <p>
                                 <span>
-                                    <Checkbox className="text-rose-500" defaultSelected color="warning"></Checkbox>
+                                    <Checkbox onClick={() => handleBerthAvailabilityCheckBox()} isSelected={berthAvailabilityCheckBox} className="text-rose-500" defaultSelected color="warning"></Checkbox>
                                 </span>
                                 <span>train with available berth</span>
                             </p>
                             <p>
                                 <span>
-                                    <Checkbox className="text-rose-500" defaultSelected color="warning"></Checkbox>
+                                    <Checkbox onClick={() => handleConcessionCheckBox()} isSelected={concesssionCheckBox} className="text-rose-500" defaultSelected color="warning"></Checkbox>
                                 </span>
                                 <span>railway path concession</span>
                             </p>
                         </div>
                         <button
+                            onClick={() => handleSearchTrain()}
                             className="ml-20 mt-10 py-2 px-14 text-black text-base font-bold nded-full overflow-hidden bg-rose-500 rounded-full transition-all duration-400 ease-in-out shadow-md hover:scale-105 hover:text-white hover:shadow-lg active:scale-90 before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-blue-500 before:to-blue-300 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-full hover:before:left-0"
                         >
                             Search trains
