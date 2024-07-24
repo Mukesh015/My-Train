@@ -12,6 +12,7 @@ import { useDateFormatter } from "@react-aria/i18n";
 import { useRouter } from "next/navigation";
 import stationData from "@/data/stationcode.json";
 import { cards } from "@/components/skeleton"
+import NextTopLoader from 'nextjs-toploader';
 
 // Station interfaces
 interface Station {
@@ -149,10 +150,8 @@ export default function TrainPage() {
 
   return (
     <>
+      <NextTopLoader />
       <main className="font-Montserrat bg-[#000435] pb-[1px]">
-        <header className="ml-14">
-          <Navbar />
-        </header>
         <div className="pt-32 pl-12 flex">
           <div>
             <div className="flex w-[450px] flex-col justify-center items-center px-4">

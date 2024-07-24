@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@kinde-oss/kinde-auth-nextjs": "^2.3.6",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.61",
@@ -20,6 +21,7 @@
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
     "next": "14.2.5",
+    "nextjs-toploader": "^1.6.12",
     "query-string": "^9.0.0",
     "react": "^18",
     "react-calendar": "^5.0.0",

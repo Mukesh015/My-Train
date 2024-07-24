@@ -9,6 +9,7 @@ import loadingAnimation from "@/lottie/loader.json"
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import dynamic from "next/dynamic";
 import notFoundAnimation from "@/lottie/trainnotfound.json"
+import NextTopLoader from 'nextjs-toploader';
 // import LiveModal from "@/components/livemodal";
 
 const TrainResult = () => {
@@ -88,10 +89,8 @@ const TrainResult = () => {
 
     return (
         <>
+            <NextTopLoader />
             <div className='font-Montserrat bg-[#000435] min-h-screen'>
-                <div className='ml-14'>
-                    <Navbar />
-                </div>
                 {isLoading ? (
                     <div className="pt-[13rem]">
                         <Lottie className="h-80" animationData={loadingAnimation} />
