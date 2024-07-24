@@ -9,7 +9,7 @@ import loadingAnimation from "@/lottie/loader.json"
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import dynamic from "next/dynamic";
 import notFoundAnimation from "@/lottie/trainnotfound.json"
-
+// import LiveModal from "@/components/livemodal";
 
 const TrainResult = () => {
 
@@ -20,6 +20,7 @@ const TrainResult = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [routeLoading, setRouteLoading] = useState<boolean>(true);
     const [showNoTrain, setShowNoTrain] = useState<boolean>(false);
+    const [liveModalVisible, setLiveModalVisible] = useState<boolean>(false);
 
     const searchParams = useSearchParams()
     const from = searchParams.get('from');
@@ -27,16 +28,14 @@ const TrainResult = () => {
     const date = searchParams.get('date');
 
     function formatDate(inputDate: any) {
-        // Assuming inputDate is in the format yyyy-mm-dd
         const [year, month, day] = inputDate.split('-');
         return `${day}-${month}-${year}`;
     }
 
-
     const handleSearchTrain = useCallback(async () => {
         const formatedDate = formatDate(date);
         try {
-            const response = await fetch(`https://mytrainapiend.vercel.app/trains/gettrainon?from=${from}&to=${to}&date=${formatedDate}`, {
+            const response = await fetch(`https://api-endpoint-black.vercel.app/trains/gettrainon?from=${from}&to=${to}&date=${formatedDate}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -56,12 +55,12 @@ const TrainResult = () => {
         } catch (error) {
             console.error("Fetch failed", error)
         }
-    }, [from, to, setTrainResult,setShowNoTrain, setIsLoading]);
+    }, [from, to, setTrainResult, setShowNoTrain, setIsLoading]);
 
     const handleGetTrainRoute = useCallback(async (train_no: any) => {
         onOpen();
         try {
-            const response = await fetch(`https://mytrainapiend.vercel.app/trains/getRoute?trainNo=${train_no.train_no}`, {
+            const response = await fetch(`https://api-endpoint-black.vercel.app/trains/getRoute?trainNo=${train_no.train_no}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -101,9 +100,8 @@ const TrainResult = () => {
                     <div>
                         {showNoTrain ? (
                             <div className="max-h-screen">
-                                <Lottie className="h-[40rem] pt-28" animationData={notFoundAnimation} />    
+                                <Lottie className="h-[40rem] pt-28" animationData={notFoundAnimation} />
                             </div>
-
                         ) : (
                             <div className='pt-32 pb-20'>
                                 {trainResult.map((train, index) => {
@@ -154,9 +152,9 @@ const TrainResult = () => {
                                                     Please check NTES website or NTES app for actual time before
                                                     boarding
                                                 </p>
-                                                <button className='cursor-pointer rounded-md relative group overflow-hidden border-2 px-6 py-1 border-green-500'>
-                                                    <span className='font-bold text-white text-xl relative z-10 group-hover:text-green-500 duration-500'>
-                                                        Book
+                                                <button onClick={() => setLiveModalVisible(true)} className='cursor-pointer rounded-md relative group overflow-hidden border-2 px-6 py-1 border-green-500'>
+                                                    <span className='font-bold text-white text-md relative z-10 group-hover:text-green-500 duration-500'>
+                                                        See live location
                                                     </span>
                                                     <span className='absolute top-0 left-0 w-full bg-green-500 duration-500 group-hover:-translate-x-full h-full'></span>
                                                     <span className='absolute top-0 left-0 w-full bg-green-500 duration-500 group-hover:translate-x-full h-full'></span>
@@ -164,6 +162,9 @@ const TrainResult = () => {
                                                     <span className='absolute delay-300 top-0 left-0 w-full bg-green-500 duration-500 group-hover:translate-y-full h-full'></span>
                                                 </button>
                                             </div>
+                                            {/* {liveModalVisible ? (
+                                                <LiveModal train_no={train_no} />
+                                            ) : null} */}
                                         </section>
                                     );
                                 })}
@@ -182,7 +183,6 @@ const TrainResult = () => {
                                     <>
                                         {routeLoading ? (
                                             <Lottie className="h-80" animationData={loadingAnimation} />
-
                                         ) : (
                                             <>
                                                 <ModalHeader className="flex flex-col gap-1">Train Route</ModalHeader>

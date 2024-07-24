@@ -219,8 +219,7 @@ export default function TrainPage() {
             </div>
             <div className="flex flex-col ml-5">
               <div className="flex flex-col">
-                <p className="mt-4">Choose date</p>
-                <div className="flex w-full flex-wrap items-end md:flex-nowrap md:mb-0">
+                <div className="mt-2 w-full items-end md:flex-nowrap md:mb-0">
                   <DatePicker
                     value={date}
                     onChange={setDate}
@@ -228,7 +227,7 @@ export default function TrainPage() {
                     className="max-w-[284px]"
                     labelPlacement="outside"
                   />
-                  <p className="text-sm ml-3 text-gray-500">
+                  <p className="text-sm ml-3 mt-2 text-gray-500">
                     Selected date: {date ? formatter.format(date.toDate(getLocalTimeZone())) : "--"}
                   </p>
                 </div>
