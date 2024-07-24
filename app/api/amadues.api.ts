@@ -29,7 +29,7 @@ export const getAmadeusData = (params: GetAmadeusDataParams): GetAmadeusDataRetu
 
   // GET request with all params we need
   const out = axios.get(
-    `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/airports/?keyword=${searchQuery}&page=${page}&subType=${subTypeCheck}`,
+    `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/flight/api/airports/?keyword=${searchQuery}&page=${page}&subType=${subTypeCheck}`,
     {
       cancelToken: source.token
     }

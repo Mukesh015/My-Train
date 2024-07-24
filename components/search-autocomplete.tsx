@@ -122,7 +122,7 @@ const SearchAutocomplete: React.FC<SearchProps> = (props) => {
         if (value) {
           props.setSearch((p) => ({ ...p, keyword: value.name, page: 0 }));
           setSearch(value.name);
-          props.setAirportCode(value.airportCode); // Set the airport code here
+          props.setAirportCode(value.airportCode);
         } else {
           setSearch("");
           props.setSearch((p) => ({ ...p, keyword: "a", page: 0 }));

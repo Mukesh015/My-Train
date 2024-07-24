@@ -58,22 +58,6 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
         }
     }, [params, setSourceCode, setDestinationCode, setSelectedDate, setAdults, setChildren, setInfants]);
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            // setIsOpenModifySearch(true);
-            if (ref.current && !ref.current.contains(event.target as Node) ) {
-                setIsOpenModifySearch(false);
-
-            }
-        };
-
-        document.addEventListener('click', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-        };
-    }, [setIsOpenModifySearch, isOpenModifySearch]);
-
 
     const handleModify = useCallback((newValue: boolean) => {
         setIsOpenModifySearch(newValue)
@@ -86,11 +70,13 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
             <ToastContainer />
             <NavbarSlug SourceCode={sourceCode} DestinationCode={destinationCode} selectedDate={selectedDate} adults={adults} children={children} infants={infants} onModifySearchChange={handleModify} />
             {isOpenModifySearch && (
-                <div ref={ref} className="absolute top-0 right-0 bottom-0 z-50 w-1/2 bg-white shadow-lg">
-                    <FlightModifySearch />
+                <div >
+
+                    <FlightModifySearch   />
+
                 </div>
             )}
-      
+
         </div>
     );
 };
