@@ -10,12 +10,15 @@
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
+    "prisma": "^5.17.0",
     "tsc-watch": "^6.2.0",
     "typescript": "^5.5.3"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
+    "@prisma/client": "^5.17.0",
     "@tinyhttp/cookie-parser": "^2.0.6",
+    "@types/express": "^4.17.21",
     "amadeus": "^10.1.0",
     "axios": "^1.7.2",
     "body-parser": "^1.20.2",
