@@ -127,7 +127,7 @@ export default function Navbar() {
                     }
                 </ul>
                 {showDropdown &&
-                    <div ref={dropdownRef} className="w-[200px] duration-300 ease-in-out translate-y-2 fixed right-[100px] top-24 bg-gray-700  rounded-lg">
+                    <div ref={dropdownRef} className="w-[200px] duration-300 ease-in-out translate-y-2 fixed right-[1px] top-24 bg-gray-700  rounded-lg">
                         <ul className="">
                             <LogoutLink>
                                 <li className="flex space-x-2 hover:bg-rose-600 rounded-lg p-2 cursor-pointer">

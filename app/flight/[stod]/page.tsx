@@ -92,6 +92,7 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
                     <FlightModifySearch />
                 </div>
             )}
+      
         </div>
     );
 };
