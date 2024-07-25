@@ -48,12 +48,15 @@ export const FlightModifySearch = () => {
         router.push(`/flight/SourceCode:${sourceCode} DestinationCode:${destinationCode} selectedDate:${formatDate(date)} adult:${adult} children: ${children} infants:${infants}`);
     }, [sourceCode, destinationCode, date, adult, children, infants, router]);
 
+
+
     return (
         <>
-            <div className="absolute top-0 right-0 bottom-0 z-50 w-1/2 bg-gray-500 shadow-lg rounded-2xl">
+            <div className="absolute top-0 right-0 bottom-0 z-50 w-1/2 bg-gray-500 shadow-lg rounded-2xl ">
                 <div className="font-serif text-black">
                     <p className="text-center mt-12 font-medium text-3xl">Modify Search</p>
                 </div>
+                
                 <div className="flex justify-center items-center mt-4">
                     <div>
                         <div>

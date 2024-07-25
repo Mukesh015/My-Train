@@ -32,12 +32,15 @@ router.get(`/${API}/airports`, async (req, res) => {
 
 
 router.get(`/${API}/flightavailabilities`, async (req, res) => {
+  const {sourceCode,destinationCode,selectedDate,adults,children,infants} = req.query;
   try {
     const response = await amadeus.shopping.flightOffersSearch.get({
-      originLocationCode: 'MAD',
-      destinationLocationCode: 'ATH',
-      departureDate: '2024-07-25', // Corrected date format
-      adults: 1
+      originLocationCode: sourceCode,
+      destinationLocationCode: destinationCode,
+      departureDate: selectedDate,
+      adults: adults,
+      children:children,
+      infants:infants
     });
 
     res.json(response.data);
