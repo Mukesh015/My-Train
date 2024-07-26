@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import { UiProviders } from "@/components/providers";
+import NextTopLoader from "nextjs-toploader";
+import Navbar from "@/components/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,11 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <NextTopLoader />
         <UiProviders>
-        <StoreProvider>
-          {children}
-        </StoreProvider>
-
+          <StoreProvider>
+            <Navbar />
+            {children}
+          </StoreProvider>
         </UiProviders>
       </body>
     </html>

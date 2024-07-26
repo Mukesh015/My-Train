@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { PrismaClient } from '@prisma/client'
 import bodyParser from 'body-parser';
 import dotenv from "dotenv";
 import path from "path";
@@ -9,8 +10,9 @@ import router from "../routes/flight"
 import home from "../routes/home";
 import gettrain from "../routes/getTrains";
 
-async function init() {
 
+
+async function init() {
     const PORT: string | undefined = process.env.PORT;
 
     if (!PORT) {
@@ -24,6 +26,7 @@ async function init() {
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(bodyParser.json());
+    app.use("/", router)
     app.use("/flight", router)
     app.use("/", home);
     app.use("/trains", gettrain);
