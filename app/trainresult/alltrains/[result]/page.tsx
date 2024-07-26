@@ -33,6 +33,7 @@ const TrainResult = () => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
+    const [currentStation, setCurrentStation] = useState<string>("");
     const [trainResult, setTrainResult] = useState([]);
     const [trainRoute, setTrainRoute] = useState([]);
     const [liveData, setLiveData] = useState([]);
@@ -125,6 +126,7 @@ const TrainResult = () => {
             if (response.ok) {
                 const data = await response.json();
                 setLiveData(data.data);
+                setCurrentStation(data.message);
                 setISLiveModalVisible(true);
                 setRouteLoading(false);
                 console.log(data);
@@ -154,7 +156,8 @@ const TrainResult = () => {
     return (
         <>
             <NextTopLoader />
-            <div className="font-Montserrat bg-[#000435] min-h-screen z-40">
+
+            <div className="font-Montserrat bg-[#000435] min-h-screen z-40 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-300 [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-track]:rounded-full">
                 {isLoading ? (
                     <div className="pt-[13rem]">
                         <Lottie className="h-80" animationData={loadingAnimation} />
@@ -241,7 +244,7 @@ const TrainResult = () => {
                         )}
 
                         <Modal
-                            className="bg-black"
+                            className="bg-black [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-300 [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-track]:rounded-full"
                             size="4xl"
                             backdrop="transparent"
                             isOpen={isOpen}
@@ -276,11 +279,11 @@ const TrainResult = () => {
                                                                     <h4 className="text-lg font-semibold">
                                                                         {station_name}
                                                                     </h4>
-                                                                    {is_current_station && (
+                                                                    {currentStation.includes(station_name) ? (
                                                                         <span className="text-sm text-blue-500 animate-pulse">
                                                                             (Current Station)
                                                                         </span>
-                                                                    )}
+                                                                    ) : (null)}
                                                                 </div>
                                                                 <time className="block mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                                                                     Expected Arrival: {arrival} | Departure: {departure}

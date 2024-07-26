@@ -4,9 +4,7 @@ import { Slide, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { NavbarSlug } from "@/components/navbarSlug"
 import { FlightModifySearch } from '@/components/flightModifySearch'
-import dynamic from "next/dynamic";
-
-
+import { getFlightstod } from '@/app/api/amadues.api'
 interface Props {
     params: {
         stod: string;
@@ -17,11 +15,28 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
     const [sourceCode, setSourceCode] = useState<string>('');
     const [destinationCode, setDestinationCode] = useState<string>('');
     const [selectedDate, setSelectedDate] = useState<string>('');
+    const [formattedDate, setFormattedDate] = useState<string>('');
+
     const [adults, setAdults] = useState<number>(0);
     const [children, setChildren] = useState<number>(0);
     const [infants, setInfants] = useState<number>(0);
     const [isOpenModifySearch, setIsOpenModifySearch] = useState<boolean>(false)
     const ref = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        var dateObj = new Date(selectedDate);
+        var weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+
+        var dayOfWeek = weekdays[dateObj.getDay()];
+        var day = dateObj.getDate();
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var month = months[dateObj.getMonth()];
+        var year = dateObj.getFullYear();
+        var formattedDate = `${dayOfWeek}, ${day} ${month} ${year}`;
+        setFormattedDate(formattedDate)
+
+    }, [selectedDate, setFormattedDate])
 
     useEffect(() => {
         if (params && params.stod) {
@@ -60,39 +75,62 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
         }
     }, [params, setSourceCode, setDestinationCode, setSelectedDate, setAdults, setChildren, setInfants]);
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            // setIsOpenModifySearch(true);
-            if (ref.current && !ref.current.contains(event.target as Node) ) {
-                setIsOpenModifySearch(false);
-
-            }
-        };
-
-        document.addEventListener('click', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-        };
-    }, [setIsOpenModifySearch, isOpenModifySearch]);
-
 
     const handleModify = useCallback((newValue: boolean) => {
         setIsOpenModifySearch(newValue)
     }, [setIsOpenModifySearch, isOpenModifySearch])
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const params = {
+                    sourceCode: sourceCode,
+                    destinationCode: destinationCode,
+                    selectedDate: selectedDate,
+                    adults: adults,
+                    children: children,
+                    infants: infants
+                };
+                const { out, source } = getFlightstod(params);
+                const response = await out;
+
+                console.log(response.data);
+            }
+            catch (e) {
+                console.error(e);
+            }
+        }
+        fetchData();
+    }, [sourceCode, destinationCode, selectedDate, adults, children, infants]);
 
 
     return (
-        <div className='h-screen bg-black'>
+        <div className="font-Montserrat h-screen w-full rounded-md bg-neutral-950 relative flex flex-col antialiased">
             <ToastContainer />
+
             <NavbarSlug SourceCode={sourceCode} DestinationCode={destinationCode} selectedDate={selectedDate} adults={adults} children={children} infants={infants} onModifySearchChange={handleModify} />
+
             {isOpenModifySearch && (
-                <div ref={ref} className="absolute top-0 right-0 bottom-0 z-50 w-1/2 bg-white shadow-lg">
+                <div >
+
                     <FlightModifySearch />
+
                 </div>
             )}
-      
+
+            <div className='mt-32 ml-4'>
+                <p className='flex justify-start '>{formattedDate}</p>
+                <p className='text-3xl font-serif mt-4 '>Select your Departure flight from </p>
+                <div className='flex justify-start text-3xl font-serif'>
+                    <p className=''>from </p>
+
+                    <p className=' text-orange-700 ml-4'>{sourceCode} </p>
+                    <p className='ml-4'>to </p>
+                    <p className='ml-4  text-orange-700'>{destinationCode} </p>
+                </div>
+            </div>
+
+
         </div>
     );
 };

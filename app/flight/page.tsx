@@ -59,14 +59,12 @@ const SearchRoot: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(defaultValue)
+
     setDefaultValue(`Adult-${adult}, Children-${children}, Infant-${infants}`);
   }, [adult, children, infants,defaultValue]);
 
 
-  useEffect(() => {
-    console.log(formatDate(date))
-  }, [date])
+
   useEffect(() => {
     setLoading(true);
 

@@ -39,6 +39,7 @@ export const NavbarSlug: React.FC<NavbarSlugProps> = ({ SourceCode, DestinationC
     }, [setIsOpenModifySearch, isOpenModifySearch, onModifySearchChange]);
 
     return (
+    
 
         <nav className="fixed top-2 z-50 font-Montserrat">
             <ul className="flex items-center p-3">
@@ -135,5 +136,6 @@ export const NavbarSlug: React.FC<NavbarSlugProps> = ({ SourceCode, DestinationC
                 </ul>
             </ul>
         </nav>
+  
     )
 }
