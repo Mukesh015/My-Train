@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node build/api/index.js",
+    "start": "node build/index.js",
     "dev": "tsc-watch --onSuccess \"npm start\""
   },
   "license": "MIT",
