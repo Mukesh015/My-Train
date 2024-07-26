@@ -89,7 +89,7 @@ const SearchRoot: React.FC = () => {
     <>
       <main className="font-Montserrat bg-[#000435] pb-[1px]">
         <header className="ml-14">
-          <Navbar />
+          {/* <Navbar /> */}
         </header>
 
         <div className="pt-32 pl-12 flex">
