@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
@@ -10,6 +10,8 @@ export default function Navbar() {
     const router = useRouter();
     const { user } = useKindeBrowserClient();
     const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [userId, setUserId] = useState<string>('');
     const [isloggedin, setisLoggedin] = useState<boolean>(false);
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
     const dropdownRef = useRef(null);
@@ -22,9 +24,36 @@ export default function Navbar() {
         setShowDropdown(!showDropdown);
     }
 
+    const handleSendUserInfo = useCallback(async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/auth/signup`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: name,
+                    email: email,
+                    id: userId
+                })
+            })
+            const data = await response.json();
+            console.log(data);
+            if (data.status) {
+                console.log("New user added successfully");
+            } else {
+                console.error("User already exist");
+            }
+        } catch (error) {
+            console.error("Failed to fetch server");
+        }
+    }, [name, email, userId])
+
     useEffect(() => {
         if (user) {
             setName(`${user.given_name} ${user.family_name}`)
+            setEmail(`${user.email}`)
+            setUserId(`${user.id}`);
             setisLoggedin(true)
         } else {
             setisLoggedin(false)
@@ -44,6 +73,12 @@ export default function Navbar() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [dropdownRef, closeDropdown]);
+
+    useEffect(() => {
+        if (isloggedin) {
+            handleSendUserInfo()
+        }
+    }, [isloggedin, handleSendUserInfo])
 
     return (
         <>

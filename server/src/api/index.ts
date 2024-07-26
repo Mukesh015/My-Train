@@ -3,11 +3,12 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import bodyParser from 'body-parser';
 import dotenv from "dotenv";
-import path from "path";
 dotenv.config({ path: "./.env" });
 import router from "../routes/flight"
+import AuthRouter from '../routes/auth';
 import home from "../routes/home";
 import gettrain from "../routes/getTrains";
+import { PrismaClient } from '@prisma/client'
 
 async function init() {
 
@@ -26,6 +27,7 @@ async function init() {
     app.use(bodyParser.json());
     app.use("/flight", router)
     app.use("/", home);
+    app.use("/auth", AuthRouter)
     app.use("/trains", gettrain);
 
     app.listen(PORT, () => {
@@ -33,4 +35,6 @@ async function init() {
     });
 }
 
-init();
+export const prisma = new PrismaClient();
+
+init()
