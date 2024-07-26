@@ -1,0 +1,31 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node build/api/index.js",
+    "dev": "tsc-watch --onSuccess \"npm start\""
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "tsc-watch": "^6.2.0",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.10.4",
+    "@tinyhttp/cookie-parser": "^2.0.6",
+    "amadeus": "^10.1.0",
+    "axios": "^1.7.2",
+    "body-parser": "^1.20.2",
+    "cheerio": "^1.0.0-rc.12",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "graphql": "^16.9.0",
+    "newsapi": "^2.4.1",
+    "user-agents": "^1.1.274"
+  }
+}
