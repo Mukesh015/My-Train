@@ -42,7 +42,7 @@ const SkeletonFour = () => {
     );
 };
 
-export const cards = [
+export const TrainCards = [
     {
         id: 1,
         content: <SkeletonOne />,
@@ -66,5 +66,31 @@ export const cards = [
         content: <SkeletonFour />,
         className: "md:col-span-2",
         thumbnail: "https://st2.indiarailinfo.com/kjfdsuiemjvcya1/0/2/4/9/4893249/0/img356914747840.jpg",
+    },
+];
+export const FlightCards = [
+    {
+        id: 1,
+        content: <SkeletonOne />,
+        className: "md:col-span-2",
+        thumbnail: "https://cdn.plnspttrs.net/14144/a6-edg-emirates-airbus-a380-861_PlanespottersNet_248136_c2eccd0f74_o.jpg",
+    },
+    {
+        id: 2,
+        content: <SkeletonTwo />,
+        className: "col-span-1",
+        thumbnail: "https://cdn.i-scmp.com/sites/default/files/images/methode/2019/02/28/f940c736-3999-11e9-a334-8d034d5595df_1320x770_095747.JPG",
+    },
+    {
+        id: 3,
+        content: <SkeletonThree />,
+        className: "col-span-1",
+        thumbnail: "https://www.primenewsghana.com/images/2019/dec/15/why_put_your_flight_in_airplane_mode.jpg",
+    },
+    {
+        id: 4,
+        content: <SkeletonFour />,
+        className: "md:col-span-2",
+        thumbnail: "https://upgradedpoints.com/wp-content/uploads/2022/12/Airbus-A380.jpg?auto=webp&disable=upscale&width=1200",
     },
 ];

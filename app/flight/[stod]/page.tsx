@@ -38,7 +38,7 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
     const [isOpenModifySearch, setIsOpenModifySearch] = useState<boolean>(false)
     const [isOpenFlightDetails, setIsOpenFlightDetails] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
-    const router=useRouter()
+    const router = useRouter()
     const [flightDetails, setFlightDetails] = useState<any>(null);
 
     const ref = useRef<HTMLDivElement>(null)
@@ -73,10 +73,10 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
         setIsOpenFlightDetails(true);
     }, [response, setFlightDetails, setIsOpenFlightDetails]);
 
-    const getCityByCode = (code:any) => {
+    const getCityByCode = (code: any) => {
         const airport = airports.find(a => a.code === code);
         return airport ? airport.city : 'Unknown';
-      };
+    };
 
 
     useEffect(() => {
@@ -129,11 +129,11 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
                     transition: Slide,
                 });
                 setTimeout(() => {
-                router.push('/flight')
-                },5000)
+                    router.push('/flight')
+                }, 5000)
             }
         }
-    }, [params, setSourceCode, setDestinationCode, setSelectedDate, setAdults, setChildren, setInfants,router]);
+    }, [params, setSourceCode, setDestinationCode, setSelectedDate, setAdults, setChildren, setInfants, router]);
 
 
 
@@ -276,7 +276,7 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
                                     <p className='text-center mb-8 mx-6 font-serif text-2xl font-medium tracking-wide'>No flight availabilities found. To modify search, click on Modify Search</p>
                                     <div className='flex justify-center'>
                                         <button
-                                        onClick={()=>handleModify(true)}
+                                            onClick={() => handleModify(true)}
                                             type="button"
                                             className="rounded-full w-[350px] text-white bg-[#d6255a] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-center h-14 dark:focus:ring-[#2557D6]/50"
                                         >

@@ -14,7 +14,6 @@ interface NavbarSlugProps {
     children: number,
     infants: number
     onModifySearchChange: (newValue: boolean) => void;
-
 }
 
 export const NavbarSlug: React.FC<NavbarSlugProps> = ({ SourceCode, DestinationCode, selectedDate, adults, children, infants, onModifySearchChange }) => {

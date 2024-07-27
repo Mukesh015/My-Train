@@ -2,7 +2,6 @@
 
 import { Input } from "@nextui-org/react";
 import React, { useState } from "react";
-import Navbar from "@/components/navbar";
 import { Checkbox } from "@nextui-org/react";
 import { DatePicker } from "@nextui-org/react";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
@@ -11,7 +10,7 @@ import { DateValue, parseDate, getLocalTimeZone } from "@internationalized/date"
 import { useDateFormatter } from "@react-aria/i18n";
 import { useRouter } from "next/navigation";
 import stationData from "@/data/stationcode.json";
-import { cards } from "@/components/skeleton"
+import { TrainCards } from "@/components/skeleton"
 import NextTopLoader from 'nextjs-toploader';
 
 // Station interfaces
@@ -54,7 +53,6 @@ export default function TrainPage() {
   const [toInputValue, setToInputValue] = useState<string>("");
   const [fromSuggestions, setFromSuggestions] = useState<Station[]>([]);
   const [toSuggestions, setToSuggestions] = useState<Station[]>([]);
-  const [selectedSuggestion, setSelectedSuggestion] = useState<Station | null>(null);
   const [fromStation, setFromStation] = useState<string | null>(null);
   const [toStation, setToStation] = useState<string | null>(null);
   const [date, setDate] = React.useState<DateValue>(parseDate(new Date().toISOString().split("T")[0]));
@@ -64,10 +62,6 @@ export default function TrainPage() {
   const [concesssionCheckBox, setConcesssionCheckBox] = useState<boolean>(false);
   let formatter = useDateFormatter({ dateStyle: "full" });
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Deleted");
-  };
 
   const handleDisabilityCheckBox = () => {
     setDisabilityCheckBox(!disabilityCheckBox);
@@ -298,7 +292,7 @@ export default function TrainPage() {
               <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4"></div>
             </div>
             <div className="h-[30rem] py-2">
-              <LayoutGrid cards={cards} />
+              <LayoutGrid cards={TrainCards} />
             </div>
           </div>
         </div>
@@ -306,4 +300,3 @@ export default function TrainPage() {
     </>
   );
 }
-
