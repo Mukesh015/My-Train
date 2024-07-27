@@ -1,11 +1,10 @@
 'use client';
 import React, { useEffect, useCallback } from "react";
 import { useState } from "react";
-import { FromSearchAutocomplete,ToSearchAutocomplete } from "@/components/search-autocomplete";
+import FromSearchAutocomplete from "@/components/From-search-autocomplete";
+import ToSearchAutocomplete from "@/components/To-Search-Autocomplete";
 import { getAmadeusData } from "../api/amadues.api";
 import axios from "axios";
-import SearchCheckboxes from "@/components/search-checkbox";
-import Traveller from "@/components/travellers";
 import { Checkbox, DatePicker } from "@nextui-org/react";
 import { DateValue, parseDate, getLocalTimeZone } from "@internationalized/date";
 import { useSelector } from 'react-redux';

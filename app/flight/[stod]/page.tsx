@@ -162,7 +162,7 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
     return (
         <>
             <div className="font-Montserrat bg-[#000435]">
-                <NavbarSlug SourceCode={sourceCode} DestinationCode={destinationCode} selectedDate={selectedDate} adults={adults} children={children} infants={infants} onModifySearchChange={handleModify} />
+                <NavbarSlug  />
                 <div className=''>
                     {loading ? (
                         <div className="pt-[5rem] bg-[#000435] h-screen">
@@ -192,8 +192,8 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
                                         : "Business not Available";
 
                                     return (
-                                        <section className="ml-20 mr-20 border p-4 mb-7 rounded-md border-blue-950 shadow-gray-500 shadow-md">
-                                            <div key={index} className="mt-5 flex">
+                                        <section key={id} className="ml-20 mr-20 border p-4 mb-7 rounded-md border-blue-950 shadow-gray-500 shadow-md">
+                                            <div className="mt-5 flex">
                                                 <h4 className="w-[600px]">
                                                     {departure.iataCode} | {new Date(departure.at).toLocaleTimeString()}
                                                 </h4>
