@@ -7,29 +7,23 @@ const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
-import Counter from "./ui/counter";
+import {Counter} from "@/components/ui/counter";
 
 
 interface NavbarSlugProps {
     SourceCode: string,
     DestinationCode: string,
     selectedDate: string
-    adults: number,
-    children: number,
-    infants: number
-    onModifySearchChange: (newValue: boolean) => void;
 }
 
-export const NavbarSlug: React.FC<NavbarSlugProps> = ({ SourceCode, DestinationCode, selectedDate, adults, children, infants, onModifySearchChange }) => {
+export const NavbarSlug: React.FC<NavbarSlugProps> = ({ SourceCode, DestinationCode, selectedDate,  }) => {
     const [isTraveller, setIsTraveller] = useState(false);
-    const noofpassasanger = adults + children + infants
+
     const router = useRouter()
-    const [isOpenModifySearch, setIsOpenModifySearch] = useState<boolean>(false)
+
     const [date, setDate] = React.useState<DateValue>(parseDate(new Date().toISOString().split('T')[0]));
     const [defaultValue, setDefaultValue] = useState('');
     const dateObj = new Date(selectedDate);
-    // const dayAbbreviation = new Intl.DateTimeFormat('en', { weekday: 'short' }).format(dateObj);
-    // const formattedDate = `${dayAbbreviation}, ${dateObj.getDate()} ${new Intl.DateTimeFormat('en', { month: 'long' }).format(dateObj)}`;
 
     const handleTraveller = useCallback(() => {
         setIsTraveller(isTraveller => !isTraveller);
@@ -44,10 +38,6 @@ export const NavbarSlug: React.FC<NavbarSlugProps> = ({ SourceCode, DestinationC
         return dateObj.toLocaleDateString("en-CA");
     };
 
-    // const handleModify = useCallback(() => {
-    //     setIsOpenModifySearch(true);
-    //     onModifySearchChange(isOpenModifySearch);
-    // }, [setIsOpenModifySearch, isOpenModifySearch, onModifySearchChange]);
 
     return (
         <nav className="bg-inherit pt-28 ml-20 mb-5">
@@ -109,15 +99,15 @@ export const NavbarSlug: React.FC<NavbarSlugProps> = ({ SourceCode, DestinationC
                                     <div className=" text-gray-500 mt-5 space-y-3">
                                         <div className="flex space-x-7">
                                             <p>Adult</p>
-                                            <Counter />
+                                            <Counter value="adult"/>
                                         </div>
                                         <div className="flex space-x-7">
                                             <p>Child</p>
-                                            <Counter />
+                                            <Counter  value="children"/>
                                         </div>
                                         <div className="flex space-x-6">
                                             <p>Infant</p>
-                                            <Counter />
+                                            <Counter value="infants"/>
                                         </div>
                                     </div>
                                 </div>
