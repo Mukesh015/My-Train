@@ -14,7 +14,7 @@ const SkeletonTwo = () => {
         <div>
             <p className="font-bold md:text-4xl text-xl text-white">Vibrant Routes</p>
             <p className="font-normal text-base my-4 max-w-lg text-neutral-200">
-                Explore diverse landscapes with Indian Railways' extensive network of routes throughout the country.
+                Explore diverse landscapes with Indian Railways extensive network of routes throughout the country.
             </p>
         </div>
     );
@@ -36,7 +36,7 @@ const SkeletonFour = () => {
         <div>
             <p className="font-bold md:text-4xl text-xl text-white">Scenic Journeys</p>
             <p className="font-normal text-base my-4 max-w-lg text-neutral-200">
-                Witness India's beauty unfold with Indian Railways' scenic train journeys through picturesque regions.
+                Witness Indias beauty unfold with Indian Railways scenic train journeys through picturesque regions.
             </p>
         </div>
     );

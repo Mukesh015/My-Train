@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import SearchAutocomplete from "./search-autocomplete"
+import SearchAutocomplete from "./From-search-autocomplete"
 import { Input } from "@nextui-org/input";
 import { useSelector } from 'react-redux';
 import { RootState } from "@/lib/store";
