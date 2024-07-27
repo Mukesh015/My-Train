@@ -175,7 +175,7 @@ export default function TrainPage() {
             </div>
             <button onClick={() => handleToggleStations()} className="outline-rose-700 ml-52 hover:bg-rose-500 outline rounded-full m-3">
               <svg
-                className="hover:-rotate-90 p-3 duration-300 rotate-90"
+                className="hover:-rotate-90 p-3 duration-700 ease-in-out rotate-90"
                 xmlns="http://www.w3.org/2000/svg"
                 height="45px"
                 viewBox="0 -960 960 960"

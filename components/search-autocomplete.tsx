@@ -31,8 +31,8 @@ interface OptionType {
 const useStyles = makeStyles((theme) => ({
   textField: {
     '& .MuiOutlinedInput-root': {
-      borderRadius: 10,
-      backgroundColor: 'white',
+      borderRadius: 10, // Makes the TextField rounded
+      backgroundColor: 'white', // Sets the background color to white
       '& fieldset': {
         borderColor: theme.palette.grey[400],
       },
@@ -53,7 +53,7 @@ export const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
   const [search, setSearch] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  console.log("source search",search)
+
   const debounceLoadData = useCallback(debounce((value: string) => {
     setKeyword(value);
   }, 1000), []);
@@ -134,6 +134,7 @@ export const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
       renderInput={(params) => (
         <TextField
           {...params}
+
           onChange={(e) => {
             e.preventDefault();
             setSearch(e.target.value);
@@ -159,7 +160,6 @@ export const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
     />
   );
 };
-
 export const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -248,6 +248,7 @@ export const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
       renderInput={(params) => (
         <TextField
           {...params}
+
           onChange={(e) => {
             e.preventDefault();
             setSearch(e.target.value);

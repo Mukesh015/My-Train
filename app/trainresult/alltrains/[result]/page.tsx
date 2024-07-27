@@ -156,7 +156,6 @@ const TrainResult = () => {
     return (
         <>
             <NextTopLoader />
-
             <div className="font-Montserrat bg-[#000435] min-h-screen z-40 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-300 [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-track]:rounded-full">
                 {isLoading ? (
                     <div className="pt-[13rem]">

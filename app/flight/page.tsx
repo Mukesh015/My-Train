@@ -1,6 +1,7 @@
 'use client';
-import React, { useEffect, useCallback, useState } from "react";
-import { FromSearchAutocomplete, ToSearchAutocomplete } from "@/components/search-autocomplete";
+import React, { useEffect, useCallback } from "react";
+import { useState } from "react";
+import { FromSearchAutocomplete,ToSearchAutocomplete } from "@/components/search-autocomplete";
 import { getAmadeusData } from "../api/amadues.api";
 import axios from "axios";
 import SearchCheckboxes from "@/components/search-checkbox";
@@ -15,7 +16,7 @@ import { LayoutGrid } from "@/components/ui/layout-grid";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import { FlightCards } from "@/components/skeleton";
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
-import { Counter } from "@/components/ui/counter";
+import Counter from "@/components/ui/counter";
 
 interface SearchState {
   keyword: string;
@@ -25,9 +26,10 @@ interface SearchState {
 }
 
 const SearchRoot: React.FC = () => {
+
   const words = [
     {
-      text: "Search",
+      text: "Serach",
       className: "text-white",
     },
     {
@@ -47,7 +49,6 @@ const SearchRoot: React.FC = () => {
       className: "text-blue-500 dark:text-blue-500",
     },
   ];
-
   const { adult, children, infants } = useSelector((state: RootState) => state.traveller);
   const router = useRouter();
   const [isTraveller, setIsTraveller] = useState(false);
@@ -104,7 +105,9 @@ const SearchRoot: React.FC = () => {
 
   useEffect(() => {
     setDefaultValue(`Adult-${adult}, Children-${children}, Infant-${infants}`);
-  }, [adult, children, infants]);
+  }, [adult, children, infants, defaultValue]);
+
+
 
   useEffect(() => {
     setLoading(true);
@@ -124,26 +127,24 @@ const SearchRoot: React.FC = () => {
     return () => {
       source.cancel();
     };
-  }, [search, sourceCode, destinationCode]);
+  }, [search]);
 
   return (
     <>
       <main className="font-Montserrat bg-[#000435] pb-[1px] h-screen">
-        <header className="ml-14"></header>
+        <header className="ml-14">
+          {/* <Navbar /> */}
+        </header>
+
         <div className="pt-32 pl-16 flex">
           <div className="">
             <div className="w-[20px]">
-              <FromSearchAutocomplete search={sourceSearch} setSearch={setSourceSearch} airportCode={sourceCode} setAirportCode={setSourceCode} />
+              <FromSearchAutocomplete search={search} setSearch={setSearch} airportCode={sourceCode} setAirportCode={setSourceCode} />
             </div>
-            <button
-              className="outline-rose-700 ml-52 hover:bg-rose-500 outline rounded-full m-3"
-              onClick={swapValues}
-            >
-              <svg className="hover:-rotate-90 p-3 duration-300 rotate-90" xmlns="http://www.w3.org/2000/svg" height="45px" viewBox="0 -960 960 960" width="45px" fill="#e8eaed">
-                <path d="M280-160 80-360l200-200 56 57-103 103h287v80H233l103 103-56 57Zm400-240-56-57 103-103H440v-80h287L624-743l56-57 200 200-200 200Z" />
-              </svg>
+            <button className="outline-rose-700 ml-44 hover:bg-rose-500 outline rounded-full m-3">
+              <svg className="hover:-rotate-90 p-3 duration-700 ease-in-out rotate-90" xmlns="http://www.w3.org/2000/svg" height="45px" viewBox="0 -960 960 960" width="45px" fill="#e8eaed"><path d="M280-160 80-360l200-200 56 57-103 103h287v80H233l103 103-56 57Zm400-240-56-57 103-103H440v-80h287L624-743l56-57 200 200-200 200Z" /></svg>
             </button>
-            <ToSearchAutocomplete search={destinationSearch} setSearch={setDestinationSearch} airportCode={destinationCode} setAirportCode={setDestinationCode} />
+            <ToSearchAutocomplete search={search} setSearch={setSearch} airportCode={destinationCode} setAirportCode={setDestinationCode} />
             <Popover placement="bottom" showArrow offset={10}>
               <PopoverTrigger>
                 <Input
@@ -160,18 +161,18 @@ const SearchRoot: React.FC = () => {
                     <p className="text-small font-bold text-foreground" {...titleProps}>
                       Add passengers
                     </p>
-                    <div className="text-gray-500 mt-5 space-y-3">
+                    <div className=" text-gray-500 mt-5 space-y-3">
                       <div className="flex space-x-7">
                         <p>Adult</p>
-                        <Counter value="adult" />
+                        <Counter />
                       </div>
                       <div className="flex space-x-7">
                         <p>Child</p>
-                        <Counter value="children" />
+                        <Counter />
                       </div>
                       <div className="flex space-x-6">
                         <p>Infant</p>
-                        <Counter value="infants" />
+                        <Counter />
                       </div>
                     </div>
                   </div>
@@ -194,18 +195,41 @@ const SearchRoot: React.FC = () => {
               </div>
             </div>
 
-            <SearchCheckboxes search={search} setSearch={setSearch} />
-
+            {/* <SearchCheckboxes search={search} setSearch={setSearch} /> */}
+            <div className="mt-8 ml-1 space-y-2">
+              <p>
+                <span>
+                  <Checkbox
+                    isSelected
+                    className="text-rose-500"
+                    defaultSelected
+                    color="warning"
+                  ></Checkbox>
+                </span>
+                <span>Search with city</span>
+              </p>
+              <p>
+                <span>
+                  <Checkbox
+                    isSelected
+                    className="text-rose-500"
+                    defaultSelected
+                    color="warning"
+                  ></Checkbox>
+                </span>
+                <span>Search with Airport</span>
+              </p>
+            </div>
             <button
-              onClick={handleSearchFlight}
-              className="ml-20 mt-10 py-2 px-14 text-black text-base font-bold rounded-full overflow-hidden bg-rose-500 transition-all duration-400 ease-in-out shadow-md hover:scale-105 hover:text-white hover:shadow-lg active:scale-90 before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-blue-500 before:to-blue-300 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-full hover:before:left-0"
+              onClick={() => handleSearchFlight()}
+              className="ml-20 mt-10 py-2 px-14 text-black text-base font-bold nded-full overflow-hidden bg-rose-500 rounded-full transition-all duration-400 ease-in-out shadow-md hover:scale-105 hover:text-white hover:shadow-lg active:scale-90 before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-blue-500 before:to-blue-300 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-full hover:before:left-0"
             >
               Search Flights
             </button>
           </div>
           <div className="ml-[50px] mt-10">
-            <div className="flex flex-col items-center justify-center h-[5rem]">
-              <p className="text-lime-600 dark:text-neutral-200 text-xs sm:text-base">
+            <div className="flex flex-col items-center justify-center h-[5rem]  ">
+              <p className="text-lime-600 dark:text-neutral-200 text-xs sm:text-base  ">
                 The road to freedom starts from here
               </p>
               <TypewriterEffectSmooth words={words} />
@@ -216,7 +240,14 @@ const SearchRoot: React.FC = () => {
             </div>
           </div>
         </div>
-      </main>
+        {/* {isTraveller && (
+          <div style={{ position: "absolute", bottom: "50px", left: "520px", marginTop: "-10px", padding: "20px" }}>
+            <div style={{ backgroundColor: "#000000", padding: "10px", borderRadius: "8px", color: "#FFFFFF" }}>
+              <Traveller setIsTraveller={setIsTraveller} />
+            </div>
+          </div>
+        )} */}
+      </main >
     </>
   );
 };
