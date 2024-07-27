@@ -37,13 +37,13 @@ export default function Navbar() {
                     id: userId
                 })
             })
-            const data = await response.json();
-            console.log(data);
-            if (data.status) {
-                console.log("New user added successfully");
-            } else {
-                console.error("User already exist");
-            }
+            // const data = await response.json();
+            // console.log(data);
+            // if (data.status) {
+            //     console.log("New user added successfully");
+            // } else {
+            //     console.error("User already exist");
+            // }
         } catch (error) {
             console.error("Failed to fetch server");
         }
@@ -82,8 +82,8 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="fixed pl-10 top-2 z-50 font-Montserrat">
-                <ul className="flex items-center p-3">
+            <nav className="fixed w-screen bg-inherit top-0 bg-[#000435] opacity-100 z-50 font-Montserrat">
+                <ul className="flex items-center pl-20 p-3">
                     <li className="flex items-center justify-center'">
                         <img className="rounded-full" height={50} width={50} src="https://99designs-blog.imgix.net/blog/wp-content/uploads/2022/05/Mastercard_2019_logo.svg-e1659036851269.png?auto=format&q=60&fit=max&w=930" alt="" />
                         <p className="font-bold ml-5 text-xl">TOURISM</p>

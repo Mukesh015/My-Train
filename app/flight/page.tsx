@@ -123,8 +123,8 @@ const SearchRoot: React.FC = () => {
             <div className="w-[20px]">
               <FromSearchAutocomplete search={search} setSearch={setSearch} airportCode={sourceCode} setAirportCode={setSourceCode} />
             </div>
-            <button className="outline-rose-700 ml-52 hover:bg-rose-500 outline rounded-full m-3">
-              <svg className="hover:-rotate-90 p-3 duration-300 rotate-90" xmlns="http://www.w3.org/2000/svg" height="45px" viewBox="0 -960 960 960" width="45px" fill="#e8eaed"><path d="M280-160 80-360l200-200 56 57-103 103h287v80H233l103 103-56 57Zm400-240-56-57 103-103H440v-80h287L624-743l56-57 200 200-200 200Z" /></svg>
+            <button className="outline-rose-700 ml-44 hover:bg-rose-500 outline rounded-full m-3">
+              <svg className="hover:-rotate-90 p-3 duration-700 ease-in-out rotate-90" xmlns="http://www.w3.org/2000/svg" height="45px" viewBox="0 -960 960 960" width="45px" fill="#e8eaed"><path d="M280-160 80-360l200-200 56 57-103 103h287v80H233l103 103-56 57Zm400-240-56-57 103-103H440v-80h287L624-743l56-57 200 200-200 200Z" /></svg>
             </button>
             <ToSearchAutocomplete search={search} setSearch={setSearch} airportCode={destinationCode} setAirportCode={setDestinationCode} />
             <Popover placement="bottom" showArrow offset={10}>

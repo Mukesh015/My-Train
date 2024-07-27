@@ -12,12 +12,12 @@ model SearchHistory {
   from   String
   to     String
   date   DateTime @default(now())
-  userId Int
+  userId String   // Changed from Int to String
   user   User     @relation(fields: [userId], references: [id])
 }
 
 model User {
-  id            Int             @id       @unique
+  id            String          @id // Changed from Int to String
   email         String          @unique
   name          String
   searchHistory SearchHistory[]

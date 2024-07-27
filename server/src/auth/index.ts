@@ -3,9 +3,12 @@ import { Request, Response } from 'express';
 
 export async function signup(req: Request, res: Response) {
     const { email, username, id } = req.body;
+    if (!email || !username || !id) {
+        return res.status(400).json({ status: 0, message: "Missing required fields" });
+    }
     try {
         const isUserExist = await prisma.user.findUnique({
-            where: { email: email }
+            where: { id: id }
         })
         if (isUserExist) {
             return res.status(400).json({ status: 0, message: "user already exists" })
@@ -14,7 +17,7 @@ export async function signup(req: Request, res: Response) {
             data: {
                 id: id,
                 email: email,
-                name: username,
+                name: username
             },
         });
         console.log(user);
@@ -24,7 +27,7 @@ export async function signup(req: Request, res: Response) {
         }
 
     } catch (error) {
-        console.error("Error signing up");
+        console.error("Error signing up",error);
         return res.status(500).json({ error: error });
     }
 }

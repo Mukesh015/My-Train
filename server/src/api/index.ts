@@ -29,6 +29,14 @@ async function init() {
     app.use("/", home);
     app.use("/auth", AuthRouter)
     app.use("/trains", gettrain);
+    await prisma.$connect()
+        .then(() => {
+            console.log('Connected to the database')
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+
 
     app.listen(PORT, () => {
         console.log(`server is running on http://localhost:${PORT}`);
