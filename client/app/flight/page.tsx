@@ -16,6 +16,7 @@ import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import { FlightCards } from "@/components/skeleton";
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
 import { Counter } from "@/components/ui/counter";
+import SearchCheckboxes from "@/components/search-checkbox";
 
 interface SearchState {
   keyword: string;
@@ -201,31 +202,8 @@ const SearchRoot: React.FC = () => {
               </div>
             </div>
 
-            {/* <SearchCheckboxes search={search} setSearch={setSearch} /> */}
-            <div className="mt-8 ml-1 space-y-2">
-              <p>
-                <span>
-                  <Checkbox
-                    isSelected
-                    className="text-rose-500"
-                    defaultSelected
-                    color="warning"
-                  ></Checkbox>
-                </span>
-                <span>Search with city</span>
-              </p>
-              <p>
-                <span>
-                  <Checkbox
-                    isSelected
-                    className="text-rose-500"
-                    defaultSelected
-                    color="warning"
-                  ></Checkbox>
-                </span>
-                <span>Search with Airport</span>
-              </p>
-            </div>
+            <SearchCheckboxes search={search} setSearch={setSearch} />
+            
             <button
               onClick={() => handleSearchFlight()}
               className="ml-20 mt-10 py-2 px-14 text-black text-base font-bold nded-full overflow-hidden bg-rose-500 rounded-full transition-all duration-400 ease-in-out shadow-md hover:scale-105 hover:text-white hover:shadow-lg active:scale-90 before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-blue-500 before:to-blue-300 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-full hover:before:left-0"
@@ -246,13 +224,7 @@ const SearchRoot: React.FC = () => {
             </div>
           </div>
         </div>
-        {/* {isTraveller && (
-          <div style={{ position: "absolute", bottom: "50px", left: "520px", marginTop: "-10px", padding: "20px" }}>
-            <div style={{ backgroundColor: "#000000", padding: "10px", borderRadius: "8px", color: "#FFFFFF" }}>
-              <Traveller setIsTraveller={setIsTraveller} />
-            </div>
-          </div>
-        )} */}
+     
       </main >
     </>
   );

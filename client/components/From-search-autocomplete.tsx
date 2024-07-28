@@ -55,7 +55,7 @@ const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
   const [search, setSearch] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  console.log("From searched values",search)
+  console.log("From searched values", search)
   const debounceLoadData = useCallback(debounce((value: string) => {
     setKeyword(value);
   }, 1000), []);
@@ -140,13 +140,14 @@ const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
           onChange={(e) => {
             e.preventDefault();
             setSearch(e.target.value);
+          
           }}
           variant="outlined"
           className={classes.textField}
           placeholder="From"
           inputProps={{
             ...params.inputProps,
-            value: props.value
+            value: search
           }}
           InputProps={{
             ...params.InputProps,

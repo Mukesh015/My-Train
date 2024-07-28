@@ -139,15 +139,16 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
           {...params}
           onChange={(e) => {
             e.preventDefault();
-            setSearch(e.target.value);
+            setSearch(e.target.value); 
           }}
           variant="outlined"
           className={classes.textField}
           placeholder="To"
           inputProps={{
             ...params.inputProps,
-            value: props.value
+            value: search
           }}
+
           InputProps={{
             ...params.InputProps,
             endAdornment: (
