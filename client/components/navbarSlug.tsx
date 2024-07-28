@@ -7,7 +7,7 @@ const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
-import Counter from "./ui/counter";
+import {Counter} from "@/components/ui/counter";
 
 
 export const NavbarSlug = () => {
@@ -71,15 +71,15 @@ export const NavbarSlug = () => {
                                     <div className=" text-gray-500 mt-5 space-y-3">
                                         <div className="flex space-x-7">
                                             <p>Adult</p>
-                                            <Counter />
+                                            <Counter value="adult"/>
                                         </div>
                                         <div className="flex space-x-7">
                                             <p>Child</p>
-                                            <Counter />
+                                            <Counter  value="children"/>
                                         </div>
                                         <div className="flex space-x-6">
                                             <p>Infant</p>
-                                            <Counter />
+                                            <Counter value="infants"/>
                                         </div>
                                     </div>
                                 </div>

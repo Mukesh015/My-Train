@@ -6,6 +6,7 @@ import { NavbarSlug } from "@/components/navbarSlug"
 import { FlightModifySearch } from '@/components/flightModifySearch'
 import dynamic from "next/dynamic";
 import loadingAnimation from "@/lottie/loader.json";
+import airports from "@/data/airports.json"
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import { useRouter } from 'next/navigation';
 import {
@@ -67,6 +68,11 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
         setFlightDetails(flight);
         setIsOpenFlightDetails(true);
     }, [response, setFlightDetails, setIsOpenFlightDetails]);
+
+    const getCityByCode = (code: any) => {
+        const airport = airports.find(a => a.code === code);
+        return airport ? airport.city : 'Unknown';
+    };
 
 
     useEffect(() => {
@@ -246,7 +252,7 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
                         <>
                             <ModalHeader className="flex flex-col justify-center items-center gap-1">
                                 Flight Details
-                                <p className='mt-2'>{sourceCode} to {destinationCode}</p>
+                                <p className='mt-2'>{getCityByCode(sourceCode)} to {getCityByCode(destinationCode)}</p>
                             </ModalHeader>
                             <ModalBody>
                                 <div className="overflow-y-auto p-5 max-h-[400px]">

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -34,13 +34,13 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: 10, // Makes the TextField rounded
       backgroundColor: 'white', // Sets the background color to white
       '& fieldset': {
-        borderColor: theme.palette.grey[400], // Set the border color if needed
+        borderColor: theme.palette.grey[400],
       },
       '&:hover fieldset': {
-        borderColor: theme.palette.grey[600], // Set the border color on hover if needed
+        borderColor: theme.palette.grey[600],
       },
       '&.Mui-focused fieldset': {
-        borderColor: theme.palette.primary.main, // Set the border color on focus
+        borderColor: theme.palette.primary.main,
       },
     },
   },

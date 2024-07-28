@@ -15,7 +15,7 @@ import { LayoutGrid } from "@/components/ui/layout-grid";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import { FlightCards } from "@/components/skeleton";
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
-import Counter from "@/components/ui/counter";
+import {Counter} from "@/components/ui/counter";
 
 interface SearchState {
   keyword: string;
@@ -57,10 +57,21 @@ const SearchRoot: React.FC = () => {
     airport: true,
     page: 0
   });
+  const [sourceSearch, setSourceSearch] = useState<SearchState>({
+    keyword: "a",
+    city: true,
+    airport: true,
+    page: 0
+  });
+  const [destinationSearch, setDestinationSearch] = useState<SearchState>({
+    keyword: "a",
+    city: true,
+    airport: true,
+    page: 0
+  });
   const [sourceCode, setSourceCode] = useState('');
   const [destinationCode, setDestinationCode] = useState('');
-
-  const [date, setDate] = React.useState<DateValue>(parseDate(new Date().toISOString().split('T')[0]));
+  const [date, setDate] = useState<DateValue>(parseDate(new Date().toISOString().split('T')[0]));
   const [defaultValue, setDefaultValue] = useState('');
   const [dataSource, setDataSource] = useState<{ meta: { count: number }; data: any[] }>({
     meta: { count: 0 },
@@ -69,9 +80,17 @@ const SearchRoot: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const swapValues = () => {
+    const tempSearch=sourceSearch
+    const tempCode = sourceCode;
+    setSourceCode(destinationCode);
+    setDestinationCode(tempCode);
+    setSourceSearch(destinationSearch)
+    setDestinationSearch(tempSearch)
+  };
 
   const handleSearchFlight = useCallback(async () => {
-    router.push(`/flight/SourceCode:${sourceCode} DestinationCode:${destinationCode} selectedDate:${formatDate(date)} adult:${adult} children: ${children} infants:${infants}`);
+    router.push(`/flight/SourceCode:${sourceCode} DestinationCode:${destinationCode} selectedDate:${formatDate(date)} adult:${adult} children:${children} infants:${infants}`);
   }, [sourceCode, destinationCode, date, adult, children, infants, router]);
 
   const handleTraveller = useCallback(() => {
@@ -84,7 +103,6 @@ const SearchRoot: React.FC = () => {
   };
 
   useEffect(() => {
-
     setDefaultValue(`Adult-${adult}, Children-${children}, Infant-${infants}`);
   }, [adult, children, infants, defaultValue]);
 
@@ -145,15 +163,15 @@ const SearchRoot: React.FC = () => {
                     <div className=" text-gray-500 mt-5 space-y-3">
                       <div className="flex space-x-7">
                         <p>Adult</p>
-                        <Counter />
+                        <Counter value="adult"/>
                       </div>
                       <div className="flex space-x-7">
                         <p>Child</p>
-                        <Counter />
+                        <Counter value="children"/>
                       </div>
                       <div className="flex space-x-6">
                         <p>Infant</p>
-                        <Counter />
+                        <Counter value="infants"/>
                       </div>
                     </div>
                   </div>
@@ -166,7 +184,6 @@ const SearchRoot: React.FC = () => {
                   <DatePicker
                     value={date}
                     onChange={setDate}
-
                     className="max-w-[284px]"
                     labelPlacement="outside"
                   />
