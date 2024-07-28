@@ -15,7 +15,7 @@ import { LayoutGrid } from "@/components/ui/layout-grid";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import { FlightCards } from "@/components/skeleton";
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
-import {Counter} from "@/components/ui/counter";
+import { Counter } from "@/components/ui/counter";
 
 interface SearchState {
   keyword: string;
@@ -57,18 +57,7 @@ const SearchRoot: React.FC = () => {
     airport: true,
     page: 0
   });
-  const [sourceSearch, setSourceSearch] = useState<SearchState>({
-    keyword: "a",
-    city: true,
-    airport: true,
-    page: 0
-  });
-  const [destinationSearch, setDestinationSearch] = useState<SearchState>({
-    keyword: "a",
-    city: true,
-    airport: true,
-    page: 0
-  });
+
   const [sourceCode, setSourceCode] = useState('');
   const [destinationCode, setDestinationCode] = useState('');
   const [date, setDate] = useState<DateValue>(parseDate(new Date().toISOString().split('T')[0]));
@@ -77,16 +66,27 @@ const SearchRoot: React.FC = () => {
     meta: { count: 0 },
     data: []
   });
-
+  const [fromValue, setFromValue] = useState<string>("");
+  const [toValue, setToValue] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
   const swapValues = () => {
-    const tempSearch=sourceSearch
-    const tempCode = sourceCode;
-    setSourceCode(destinationCode);
-    setDestinationCode(tempCode);
-    setSourceSearch(destinationSearch)
-    setDestinationSearch(tempSearch)
+
+    const tempFrom = sourceCode;
+    const tempTo = destinationCode;
+    setSourceCode(tempTo);
+    setDestinationCode(tempFrom);
+    const tempFromValue = fromValue;
+    const tempToValue = toValue;
+    setFromValue(tempToValue);
+    setToValue(tempFromValue);
+    console.log("From value: " + fromValue + " to value: " + toValue)
+    setSearch((prevSearch) => ({
+      ...prevSearch,
+      keyword: "",
+      page: 0,
+    }));
+
   };
 
   const handleSearchFlight = useCallback(async () => {
@@ -132,18 +132,25 @@ const SearchRoot: React.FC = () => {
     <>
       <main className="font-Montserrat bg-[#000435] pb-[1px] h-screen">
         <header className="ml-14">
-          {/* <Navbar /> */}
+
         </header>
 
         <div className="pt-32 pl-16 flex">
           <div className="">
             <div className="w-[20px]">
-              <FromSearchAutocomplete search={search} setSearch={setSearch} airportCode={sourceCode} setAirportCode={setSourceCode} />
+              <FromSearchAutocomplete
+                airportCode={sourceCode}
+                setAirportCode={setSourceCode}
+                search={search}
+                setSearch={setSearch}
+                value={fromValue}
+                setValue={setFromValue}
+              />
             </div>
-            <button className="outline-rose-700 ml-44 hover:bg-rose-500 outline rounded-full m-3">
+            <button onClick={() => swapValues()} className="outline-rose-700 ml-44 hover:bg-rose-500 outline rounded-full m-3">
               <svg className="hover:-rotate-90 p-3 duration-700 ease-in-out rotate-90" xmlns="http://www.w3.org/2000/svg" height="45px" viewBox="0 -960 960 960" width="45px" fill="#e8eaed"><path d="M280-160 80-360l200-200 56 57-103 103h287v80H233l103 103-56 57Zm400-240-56-57 103-103H440v-80h287L624-743l56-57 200 200-200 200Z" /></svg>
             </button>
-            <ToSearchAutocomplete search={search} setSearch={setSearch} airportCode={destinationCode} setAirportCode={setDestinationCode} />
+            <ToSearchAutocomplete search={search} setSearch={setSearch} airportCode={destinationCode} setAirportCode={setDestinationCode} value={toValue} setValue={setToValue} />
             <Popover placement="bottom" showArrow offset={10}>
               <PopoverTrigger>
                 <Input
@@ -163,15 +170,15 @@ const SearchRoot: React.FC = () => {
                     <div className=" text-gray-500 mt-5 space-y-3">
                       <div className="flex space-x-7">
                         <p>Adult</p>
-                        <Counter value="adult"/>
+                        <Counter value="adult" />
                       </div>
                       <div className="flex space-x-7">
                         <p>Child</p>
-                        <Counter value="children"/>
+                        <Counter value="children" />
                       </div>
                       <div className="flex space-x-6">
                         <p>Infant</p>
-                        <Counter value="infants"/>
+                        <Counter value="infants" />
                       </div>
                     </div>
                   </div>

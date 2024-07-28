@@ -5,7 +5,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import axios, { CancelTokenSource } from 'axios';
 import { getAmadeusData } from "@/app/api/amadues.api";
-import { debounce } from "lodash";
+import { debounce, values } from "lodash";
 
 interface SearchProps {
   airportCode: string;
@@ -20,6 +20,8 @@ interface SearchProps {
     keyword: string;
     page: number;
   }>>;
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface OptionType {
@@ -31,8 +33,8 @@ interface OptionType {
 const useStyles = makeStyles((theme) => ({
   textField: {
     '& .MuiOutlinedInput-root': {
-      borderRadius: 10, // Makes the TextField rounded
-      backgroundColor: 'white', // Sets the background color to white
+      borderRadius: 10,
+      backgroundColor: 'white',
       '& fieldset': {
         borderColor: theme.palette.grey[400],
       },
@@ -53,7 +55,7 @@ const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
   const [search, setSearch] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-
+  console.log("From searched values",search)
   const debounceLoadData = useCallback(debounce((value: string) => {
     setKeyword(value);
   }, 1000), []);
@@ -115,26 +117,26 @@ const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
       onClose={() => {
         setOpen(false);
       }}
-      getOptionSelected={(option, value) =>
-        option.name === value.name && option.type === value.type
-      }
+      getOptionSelected={(option, value) => option.name === value.name}
       onChange={(e, value: OptionType | null) => {
         if (value) {
           props.setSearch((p) => ({ ...p, keyword: value.name, page: 0 }));
           setSearch(value.name);
           props.setAirportCode(value.airportCode);
+          props.setValue(value.name); // Update the value prop
         } else {
           setSearch("");
           props.setSearch((p) => ({ ...p, keyword: "a", page: 0 }));
+          props.setValue(""); // Update the value prop
         }
       }}
       getOptionLabel={(option: OptionType) => option.name}
       options={options}
       loading={loading}
+      value={options.find((option) => option.name === props.value) || { name: props.value, type: '', airportCode: '' }} // Control the value of the Autocomplete
       renderInput={(params) => (
         <TextField
           {...params}
-
           onChange={(e) => {
             e.preventDefault();
             setSearch(e.target.value);
@@ -144,7 +146,7 @@ const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
           placeholder="From"
           inputProps={{
             ...params.inputProps,
-            value: search
+            value: props.value
           }}
           InputProps={{
             ...params.InputProps,

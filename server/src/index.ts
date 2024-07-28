@@ -4,10 +4,10 @@ import cors from "cors";
 import bodyParser from 'body-parser';
 import dotenv from "dotenv";
 dotenv.config({ path: "./.env" });
-import router from "../routes/flight"
-import AuthRouter from '../routes/auth';
-import home from "../routes/home";
-import gettrain from "../routes/getTrains";
+import router from "./routes/flight"
+import AuthRouter from './routes/auth';
+import home from "./routes/home";
+import gettrain from "./routes/getTrains";
 import { PrismaClient } from '@prisma/client'
 
 async function init() {
