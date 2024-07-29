@@ -139,7 +139,7 @@ const TrainResult = () => {
     }, [from, to, setTrainResult, setShowNoTrain, setIsLoading]);
 
     const handleGetTrainRoute = useCallback(
-        async (train_no: any) => {
+        async (train_no: any,trainName:any) => {
             onOpen();
             try {
                 const response = await fetch(
@@ -254,7 +254,7 @@ const TrainResult = () => {
                                                     Runs on : {renderRunningDays(running_days)}
                                                 </h2>
                                                 <h3
-                                                    onClick={() => handleGetTrainRoute({ train_no })}
+                                                    onClick={() => handleGetTrainRoute({ train_no },train_name)}
                                                     className="text-blue-500 hover:underline cursor-pointer text-sm md:text-base"
                                                 >
                                                     Train Route
