@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { Button } from "@nextui-org/react";
 
 export default function Navbar() {
 
@@ -14,14 +15,24 @@ export default function Navbar() {
     const [userId, setUserId] = useState<string>('');
     const [isloggedin, setisLoggedin] = useState<boolean>(false);
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
-    const dropdownRef = useRef(null);
+    const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const sidebarRef = useRef<HTMLDivElement>(null);
 
     const closeDropdown = () => {
         setShowDropdown(false);
     };
 
+    const closeSidebar = () => {
+        setShowMobileMenu(false);
+    }
+
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
+    }
+
+    const toggleMobileMenu = () => {
+        setShowMobileMenu(!showMobileMenu);
     }
 
     const handleSendUserInfo = useCallback(async () => {
@@ -37,13 +48,13 @@ export default function Navbar() {
                     id: userId
                 })
             })
-            // const data = await response.json();
-            // console.log(data);
-            // if (data.status) {
-            //     console.log("New user added successfully");
-            // } else {
-            //     console.error("User already exist");
-            // }
+            const data = await response.json();
+            console.log(data);
+            if (data.status) {
+                console.log("New user added successfully");
+            } else {
+                console.error("User already exist");
+            }
         } catch (error) {
             console.error("Failed to fetch server");
         }
@@ -61,18 +72,21 @@ export default function Navbar() {
     }, [setisLoggedin, user])
 
     useEffect(() => {
-        const handleClickOutside = (event: any) => {
+        const handleClickOutside = (event: MouseEvent) => {
             // @ts-ignore
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 closeDropdown();
             }
+            // @ts-ignore
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+                closeSidebar();
+            }
         };
-
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [dropdownRef, closeDropdown]);
+    }, [dropdownRef, closeDropdown, closeSidebar, sidebarRef]);
 
     useEffect(() => {
         if (isloggedin) {
@@ -83,12 +97,12 @@ export default function Navbar() {
     return (
         <>
             <nav className="fixed w-screen bg-inherit top-0 bg-[#000435] opacity-100 z-50 font-Montserrat">
-                <ul className="flex items-center pl-20 p-3">
-                    <li className="flex items-center justify-center'">
-                        <img className="rounded-full" height={50} width={50} src="https://99designs-blog.imgix.net/blog/wp-content/uploads/2022/05/Mastercard_2019_logo.svg-e1659036851269.png?auto=format&q=60&fit=max&w=930" alt="" />
+                <div className="flex items-center justify-between pl-4 md:pl-10 p-3">
+                    <div className="flex items-center justify-center">
+                        <img className="rounded-full" height={50} width={50} src="https://99designs-blog.imgix.net/blog/wp-content/uploads/2022/05/Mastercard_2019_logo.svg-e1659036851269.png?auto=format&q=60&fit=max&w=930" alt="Logo" />
                         <p className="font-bold ml-5 text-xl">TOURISM</p>
-                    </li>
-                    <ul className="flex mr-20 ml-64">
+                    </div>
+                    <ul className="hidden md:flex md:mr-20 md:ml-40 space-x-5">
                         <li onClick={() => router.push("/")} className="text-rose-500 cursor-pointer">
                             <p className="text-lg m-6 group relative w-max">
                                 <span className="flex items-center">
@@ -111,71 +125,119 @@ export default function Navbar() {
                         <li onClick={() => router.push("/flight")} className="cursor-pointer">
                             <p className="text-lg m-6 group relative w-max">
                                 <span className="flex items-center">
-                                    <svg className="mr-2" xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#e8eaed"><path d="M280-80v-100l120-84v-144L80-280v-120l320-224v-176q0-33 23.5-56.5T480-880q33 0 56.5 23.5T560-800v176l320 224v120L560-408v144l120 84v100l-200-60-200 60Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="mr-2" height="18px" viewBox="0 -960 960 960" width="18px" fill="#e8eaed"><path d="M280-80v-100l120-84v-144L80-280v-120l320-224v-176q0-33 23.5-56.5T480-880q33 0 56.5 23.5T560-800v176l320 224v120L560-408v144l120 84v100l-200-60-200 60Z" /></svg>
                                     Flight</span>
                                 <span className="absolute -bottom-1 left-1/2 w-0 transition-all h-0.5 bg-indigo-600 group-hover:w-3/6"></span>
                                 <span className="absolute -bottom-1 right-1/2 w-0 transition-all h-0.5 bg-indigo-600 group-hover:w-3/6"></span>
                             </p>
                         </li>
-                        <li onClick={() => router.push("/about")} className="mr-32 cursor-pointer">
-                            <p className="text-lg m-6 group relative w-max">
-                                <span className="flex items-center">
-                                    <svg className="mr-2" xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#e8eaed"><path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" /></svg>
-                                    About</span>
-                                <span className="absolute -bottom-1 left-1/2 w-0 transition-all h-0.5 bg-indigo-600 group-hover:w-3/6"></span>
-                                <span className="absolute -bottom-1 right-1/2 w-0 transition-all h-0.5 bg-indigo-600 group-hover:w-3/6"></span>
-                            </p>
-                        </li>
                     </ul>
-                    {isloggedin ? (
-                        <p onClick={() => toggleDropdown()} className="flex space-x-3 p-2 hover:bg-gray-700 rounded-lg cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z" /></svg>
-                            <span>{name}</span>
-                            <svg className={`${showDropdown ? "rotate-90" : ""} duration-300 ease-in-out`} xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-360 280-560h400L480-360Z" /></svg>
-                        </p>
-                    ) : (
+                    <div className="hidden md:flex items-center">
+                        {isloggedin ? (
+                            <p onClick={() => toggleDropdown()} className="flex space-x-3 p-2 hover:bg-gray-700 rounded-lg cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z" /></svg>
+                                <span>{name}</span>
+                                <svg className={`${showDropdown ? "rotate-90" : ""} duration-300 ease-in-out`} xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-360 280-560h400L480-360Z" /></svg>
+                            </p>
+                        ) : (
+                            <ul className="flex space-x-5">
+                                <li>
+                                    <LoginLink postLoginRedirectURL="/">
+                                        <button
+                                            className="flex items-center gap-2 z-10 cursor-pointer relative px-8 py-2 rounded-md bg-inherit isolation-auto border-2 border-lime-500 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-lime-500 before:-z-10 before:aspect-square before:hover:scale-150 overflow-hidden before:hover:duration-300"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e8eaed"><path d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z" /></svg>
+                                            Login
+                                        </button>
+                                    </LoginLink >
 
-                        <ul className="flex space-x-5">
-                            <li>
-                                <LoginLink postLoginRedirectURL="/">
-                                    <button
-                                        className="flex items-center gap-2 z-10 cursor-pointer relative px-8 py-2 rounded-md bg-inherit isolation-auto border-2 border-lime-500 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-lime-500 before:-z-10 before:aspect-square before:hover:scale-150 overflow-hidden before:hover:duration-300"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e8eaed"><path d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z" /></svg>
-                                        Login
-                                    </button>
-                                </LoginLink >
-
-                            </li >
-                            <li>
-                                <RegisterLink postLoginRedirectURL="/">
-                                    <button
-                                        className="flex gap-2 z-10 cursor-pointer relative px-8 py-2 rounded-md bg-inherit isolation-auto border-2 border-rose-500 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-rose-500 before:-z-10 before:aspect-square before:hover:scale-150 overflow-hidden before:hover:duration-300"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z" /></svg>
-                                        Signup
-                                    </button>
-                                </RegisterLink>
-                            </li>
-                        </ul >
-                    )
-                    }
-                </ul>
-                {showDropdown &&
-                    <div ref={dropdownRef} className="w-[200px] duration-300 ease-in-out translate-y-2 fixed right-[150px] top-24 bg-gray-700  rounded-lg">
-                        <ul className="">
-                            <LogoutLink>
-                                <li className="flex space-x-2 hover:bg-rose-600 rounded-lg p-2 cursor-pointer">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" /></svg>
-                                    <span>
-                                        Logout
-                                    </span>
+                                </li >
+                                <li>
+                                    <RegisterLink postLoginRedirectURL="/">
+                                        <button
+                                            className="flex gap-2 z-10 cursor-pointer relative px-8 py-2 rounded-md bg-inherit isolation-auto border-2 border-rose-500 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-rose-500 before:-z-10 before:aspect-square before:hover:scale-150 overflow-hidden before:hover:duration-300"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z" /></svg>
+                                            Signup
+                                        </button>
+                                    </RegisterLink>
                                 </li>
-                            </LogoutLink>
+                            </ul >
+                        )}
+                    </div>
+
+                    {/* Hamburger menu button */}
+                    <div className="md:hidden flex items-center">
+                        <button
+                            className="text-white focus:outline-none"
+                            onClick={toggleMobileMenu}
+                        >
+                            <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M4 6h16M4 12h16m-7 6h7"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Mobile menu */}
+                {showMobileMenu && (
+                    <div id="sidebar" ref={sidebarRef} className="md:hidden bg-[#000435]  backdrop-blur-md transition-transform duration-400 ease-in-out fixed right-0 top-0 h-screen border w-[18rem]">
+                        <svg onClick={() => closeSidebar()} className="p-1 right-1 fixed mt-2" xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#e8eaed"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
+                        <ul className="pt-20 pl-5 space-y-14 text-rose">
+                            <li className="flex space-x-3 p-2">
+                                {isloggedin ? (
+                                    <p className="flex space-x-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FF1D8D"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z" /></svg>
+                                        <span>{name}</span>
+                                        {/* Logout banate hobek */}
+                                    </p>
+                                ) : (
+                                    <p className="flex space-x-3 justify-center items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FF1D8D"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z" /></svg>
+                                        <LoginLink><Button radius="md">Login</Button></LoginLink>
+                                    </p>
+                                )}
+                            </li>
+                            <li onClick={() => router.push("/")} className="flex space-x-3 hover:bg-slate-600 p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FF1D8D"><path d="M160-120v-480l320-240 320 240v480H560v-280H400v280H160Z" /></svg>
+                                <p className="text-lg">
+                                    Home
+                                </p>
+                            </li>
+                            <li onClick={() => router.push("/train")} className="flex space-x-3 hover:bg-slate-600 p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FF1D8D"><path d="M160-340v-380q0-53 27.5-84.5t72.5-48q45-16.5 102.5-22T480-880q66 0 124.5 5.5t102 22q43.5 16.5 68.5 48t25 84.5v380q0 59-40.5 99.5T660-200l60 60v20h-80l-80-80H400l-80 80h-80v-20l60-60q-59 0-99.5-40.5T160-340Zm80-220h200v-120H240v120Zm280 0h200v-120H520v120ZM340-320q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm280 0q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Z" /></svg>
+                                <p className="text-lg">
+                                    Train
+                                </p>
+                            </li>
+                            <li onClick={() => router.push("/flight")} className="flex space-x-3 hover:bg-slate-600 p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FF1D8D"><path d="M280-80v-100l120-84v-144L80-280v-120l320-224v-176q0-33 23.5-56.5T480-880q33 0 56.5 23.5T560-800v176l320 224v120L560-408v144l120 84v100l-200-60-200 60Z" /></svg>
+                                <p className="text-lg">
+                                    Flight
+                                </p>
+                            </li>
+                            <li>
+                                {isloggedin &&
+                                    <LogoutLink><Button className="flex space-x-3" color="danger" radius="md">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" /></svg>
+                                        Logout</Button></LogoutLink>
+                                }
+                            </li>
                         </ul>
                     </div>
-                }
-            </nav >
+                )}
+            </nav>
         </>
     )
 }

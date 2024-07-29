@@ -1,9 +1,8 @@
 'use client'
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Slide, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { NavbarSlug } from "@/components/navbarSlug"
-import { FlightModifySearch } from '@/components/flightModifySearch'
+import notFoundAnimation from "@/lottie/trainnotfound.json";
 import dynamic from "next/dynamic";
 import loadingAnimation from "@/lottie/loader.json";
 import airports from "@/data/airports.json"
@@ -27,6 +26,8 @@ interface Props {
 
 
 const ChannelPage: React.FC<Props> = ({ params }) => {
+
+    const [showNoFlight, setShowNoFlight] = useState<boolean>(false);
     const [sourceCode, setSourceCode] = useState<string>('');
     const [destinationCode, setDestinationCode] = useState<string>('');
     const [selectedDate, setSelectedDate] = useState<string>('');
@@ -66,8 +67,9 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
     const handleFlightDetails = useCallback(async (id: any) => {
         const flight = response.find((flight: { id: any; }) => flight.id === id);
         setFlightDetails(flight);
+        console.log(flightDetails)
         setIsOpenFlightDetails(true);
-    }, [response, setFlightDetails, setIsOpenFlightDetails]);
+    }, [response, setFlightDetails, flightDetails, setIsOpenFlightDetails]);
 
     const getCityByCode = (code: any) => {
         const airport = airports.find(a => a.code === code);
@@ -107,23 +109,10 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
                 setChildren(parseInt(childrenCount, 10));
                 setInfants(parseInt(infantCount, 10));
             } else {
-                toast.warn('Make sure you’ve correctly input the departure and arrival cities, dates, and other relevant information', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Slide,
-                });
-                setTimeout(() => {
-                    router.push('/flight')
-                }, 5000)
+                setShowNoFlight(true);
             }
         }
-    }, [params, setSourceCode, setDestinationCode, setSelectedDate, setAdults, setChildren, setInfants, router]);
+    }, [params, setSourceCode, setShowNoFlight, setDestinationCode, setSelectedDate, setAdults, setChildren, setInfants, router]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -162,84 +151,88 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
     return (
         <>
             <div className="font-Montserrat bg-[#000435]">
-                <NavbarSlug  />
-                <div className=''>
+                <NavbarSlug />
+                <div className='pb-10'>
                     {loading ? (
                         <div className="pt-[5rem] bg-[#000435] h-screen">
                             <Lottie className="h-80" animationData={loadingAnimation} />
                         </div>
                     ) : (
-                        <>
-                            {
-                                response.map((flight: any, index: any) => {
-                                    const { itineraries, price, id } = flight;
-                                    const itinerary = itineraries[0];
-                                    const segments = itinerary.segments;
-                                    const firstSegment = segments[0];
-                                    const lastSegment = segments[segments.length - 1];
+                        <div>
+                            {showNoFlight ? (
+                                <div className="max-h-screen">
+                                    <Lottie className="h-[40rem] pt-28" animationData={notFoundAnimation} />
+                                </div>
+                            ) : (
+                                <div>
+                                    {
+                                        response.map((flight: any, index: any) => {
+                                            const { itineraries, price, id } = flight;
+                                            const itinerary = itineraries[0];
+                                            const segments = itinerary.segments;
+                                            const firstSegment = segments[0];
+                                            const lastSegment = segments[segments.length - 1];
 
-                                    const { departure, arrival } = firstSegment;
+                                            const { departure, arrival } = firstSegment;
 
-                                    const totalDuration = formatDuration(itinerary.duration);
-                                    const numberOfStops = segments.length - 1;
+                                            const totalDuration = formatDuration(itinerary.duration);
 
-                                    const economyClassFare = price.total
-                                        ? `${(price.total * 90.90).toFixed(2)} INR`
-                                        : "Economy not Available";
+                                            const economyClassFare = price.total
+                                                ? `${(price.total * 90.90).toFixed(2)} INR`
+                                                : "Economy not Available";
 
-                                    const businessClassFare = price.businessClassTotal
-                                        ? `${(price.businessClassTotal * 90.90)} INR`
-                                        : "Business not Available";
+                                            const businessClassFare = price.businessClassTotal
+                                                ? `${(price.businessClassTotal * 90.90)} INR`
+                                                : "Business not Available";
 
-                                    return (
-                                        <section key={id} className="ml-20 mr-20 border p-4 mb-7 rounded-md border-blue-950 shadow-gray-500 shadow-md">
-                                            <div className="mt-5 flex">
-                                                <h4 className="w-[600px]">
-                                                    {departure.iataCode} | {new Date(departure.at).toLocaleTimeString()}
-                                                </h4>
-                                                <div>
-                                                    <p className="flex items-center space-x-4 mr-[400px]">
-                                                        <span className="flex-1 text-center">----------</span>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed" className="flex-shrink-0">
-                                                            <path d="m397-115-99-184-184-99 71-70 145 25 102-102-317-135 84-86 385 68 124-124q23-23 57-23t57 23q23 23 23 56.5T822-709L697-584l68 384-85 85-136-317-102 102 26 144-71 71Z" />
-                                                        </svg>
-                                                        <span className="flex-1 text-center">----------</span>
-                                                    </p>
-                                                    <p>{numberOfStops} stop{numberOfStops !== 1 && 's'} {totalDuration}</p>
-                                                </div>
-                                                <h5>
-                                                    {lastSegment.arrival.iataCode} | {new Date(lastSegment.arrival.at).toLocaleTimeString()}
-                                                </h5>
-                                            </div>
-                                            <div className="space-x-5 mt-5 flex ">
-                                                <Button radius="md">{economyClassFare}</Button>
-                                                <Button radius="md">{businessClassFare}</Button>
-                                            </div>
-                                            <div className="mt-5 text-gray-500 flex items-center space-x-5">
-                                                <p className="text-small">
-                                                    Please check NTES website or NTES app for actual time before boarding
-                                                </p>
-                                                <button
-                                                    className="cursor-pointer rounded-md relative group overflow-hidden border-2 px-6 py-1 border-green-500"
-                                                    onClick={() => handleFlightDetails(id)}
-                                                >
-                                                    <span className="font-bold text-white text-md relative z-10 group-hover:text-green-500 duration-500">
-                                                        Flight Details
-                                                    </span>
-                                                    <span className="absolute top-0 left-0 w-full bg-green-500 duration-500 group-hover:-translate-x-full h-full"></span>
-                                                    <span className="absolute top-0 left-0 w-full bg-green-500 duration-500 group-hover:translate-x-full h-full"></span>
-                                                    <span className="absolute top-0 left-0 w-full bg-green-500 duration-500 group-hover:-translate-y-full h-full"></span>
-                                                    <span className="absolute top-0 left-0 w-full bg-green-500 duration-500 group-hover:translate-y-full h-full"></span>
-                                                </button>
-                                            </div>
-                                        </section>
-                                    );
-                                })
-                            }
-                        </>
+                                            return (
+                                                <section key={id} className="ml-20 mr-20 border p-4 mb-7 rounded-md border-blue-950 shadow-gray-500 shadow-md">
+                                                    <div className="mt-5 flex">
+                                                        <h4 className="w-[600px]">
+                                                            {departure.iataCode} | {new Date(departure.at).toLocaleTimeString()}
+                                                        </h4>
+                                                        <div>
+                                                            <p className="flex items-center space-x-4 mr-[350px]">
+                                                                <span className="flex-1 text-center">--------</span>
+                                                                <p>{totalDuration}</p>
+                                                                <span className="flex-1 text-center">--------</span>
+                                                            </p>
+                                                        </div>
+                                                        <h5>
+                                                            {lastSegment.arrival.iataCode} | {new Date(lastSegment.arrival.at).toLocaleTimeString()}
+                                                        </h5>
+                                                    </div>
+                                                    <div className="space-x-5 mt-5 flex ">
+                                                        <Button radius="md">{economyClassFare}</Button>
+                                                        <Button radius="md">{businessClassFare}</Button>
+                                                    </div>
+                                                    <div className="mt-5 text-gray-500 flex items-center space-x-5">
+                                                        <p className="text-small">
+                                                            Please check NTES website or NTES app for actual time before boarding
+                                                        </p>
+                                                        <button
+                                                            className="cursor-pointer rounded-md relative group overflow-hidden border-2 px-6 py-1 border-green-500"
+                                                            onClick={() => handleFlightDetails(id)}
+                                                        >
+                                                            <span className="font-bold text-white text-md relative z-10 group-hover:text-green-500 duration-500">
+                                                                Flight Details
+                                                            </span>
+                                                            <span className="absolute top-0 left-0 w-full bg-green-500 duration-500 group-hover:-translate-x-full h-full"></span>
+                                                            <span className="absolute top-0 left-0 w-full bg-green-500 duration-500 group-hover:translate-x-full h-full"></span>
+                                                            <span className="absolute top-0 left-0 w-full bg-green-500 duration-500 group-hover:-translate-y-full h-full"></span>
+                                                            <span className="absolute top-0 left-0 w-full bg-green-500 duration-500 group-hover:translate-y-full h-full"></span>
+                                                        </button>
+                                                    </div>
+                                                </section>
+                                            );
+                                        })
+                                    }
+                                </div>
+                            )}
+                        </div>
                     )}
                 </div>
-            </div>
+            </div >
             <Modal
                 className="bg-black"
                 size="4xl"
@@ -250,48 +243,73 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
                 <ModalContent>
                     {isOpenFlightDetails && (
                         <>
-                            <ModalHeader className="flex flex-col justify-center items-center gap-1">
-                                Flight Details
-                                <p className='mt-2'>{getCityByCode(sourceCode)} to {getCityByCode(destinationCode)}</p>
-                            </ModalHeader>
+                            <ModalHeader>Flight Details</ModalHeader>
                             <ModalBody>
                                 <div className="overflow-y-auto p-5 max-h-[400px]">
                                     <ol className="relative border-l-2 border-gray-200 dark:border-gray-700">
-                                        {flightDetails.itineraries[0].segments.map((segment: any, index: any) => (
-                                            <li key={index} className="mb-10 ml-4 flex flex-col items-start">
-                                                <div className="flex items-center mb-4">
-                                                    <div className="flex-1">
-                                                        <h4 className="text-lg font-semibold">{segment.departure.iataCode} to {segment.arrival.iataCode}</h4>
-                                                        <p className="mt-2">{formatDate(segment.departure.at)} - {formatDate(segment.arrival.at)}</p>
-                                                        <time className="block mb-1 mt-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">{formatDuration(segment.duration)}</time>
+                                        {flightDetails.itineraries[0].segments.map(
+                                            (segment: any, index: any) => (
+                                                <li key={index} className="mb-10 ml-4">
+
+                                                    {/* Departure Airport */}
+                                                    <div className="flex items-center mb-4">
+                                                        <div className="absolute w-3 h-3 bg-blue-600 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-blue-500"></div>
+                                                        <h4 className="text-lg font-semibold">
+                                                            {segment.departure.iataCode}
+                                                        </h4>
                                                     </div>
-                                                </div>
-                                                {index < flightDetails.itineraries[0].segments.length - 1 && (
-                                                    <div className="flex flex-col items-center mr-4 mb-4">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                                                            <path d="m397-115-99-184-184-99 71-70 145 25 102-102-317-135 84-86 385 68 124-124q23-23 57-23t57 23q23 23 23 56.5T822-709L697-584l68 384-85 85-136-317-102 102 26 144-71 71Z" />
-                                                        </svg>
-                                                        <span className="text-sm text-gray-500">Duration: {formatDuration(segment.duration)}</span>
+                                                    <div className="flex items-start flex-col mb-4 ml-6">
+                                                        <p className="text-sm text-gray-500">Departure: {formatDate(segment.departure.at)}</p>
+                                                        <p className="text-sm text-gray-500">
+                                                            Terminal: {segment.arrival.terminal || 'N/A'}
+                                                        </p>
+                                                        <p className="text-sm text-gray-500">
+                                                            Aircraft: {segment.aircraft.code}
+                                                        </p>
+                                                        <p className="text-sm text-gray-500">
+                                                            Flight Number: {segment.carrierCode} {segment.number}
+                                                        </p>
                                                     </div>
-                                                )}
-                                            </li>
-                                        ))}
+
+                                                    {/* Connection */}
+                                                    {index < flightDetails.itineraries[0].segments.length - 1 && (
+                                                        <div className="flex flex-col items-center ml-6">
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                height="24px"
+                                                                viewBox="0 -960 960 960"
+                                                                width="24px"
+                                                                fill="#e8eaed"
+                                                            >
+                                                                <path d="m397-115-99-184-184-99 71-70 145 25 102-102-317-135 84-86 385 68 124-124q23-23 57-23t57 23q23 23 23 56.5T822-709L697-584l68 384-85 85-136-317-102 102 26 144-71 71Z" />
+                                                            </svg>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Arrival Airport */}
+                                                    <div className="flex items-center mt-4 mb-4">
+                                                        <div className="absolute w-3 h-3 bg-blue-600 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-blue-500"></div>
+                                                        <h4 className="text-lg font-semibold">
+                                                            {segment.arrival.iataCode}
+                                                        </h4>
+                                                    </div>
+                                                    <div className="flex items-start flex-col mb-4 ml-6">
+                                                        <p className="text-sm text-gray-500">Arrival: {formatDate(segment.arrival.at)}</p>
+                                                        <p className="text-sm text-gray-500">
+                                                            Terminal: {segment.arrival.terminal || 'N/A'}
+                                                        </p>
+                                                        <p className="text-sm text-gray-500">
+                                                            Duration: {formatDuration(segment.duration)}
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                            )
+                                        )}
                                     </ol>
-                                    <div className="flex flex-col items-start mt-4">
-                                        <h4 className="text-lg font-semibold">Final Arrival:</h4>
-                                        <p className="mt-2">Airport: {flightDetails.itineraries[0].segments[flightDetails.itineraries[0].segments.length - 1].arrival.iataCode}</p>
-                                        <p className="mt-2">Time: {new Date(flightDetails.itineraries[0].segments[flightDetails.itineraries[0].segments.length - 1].arrival.at).toLocaleTimeString()}</p>
-                                        <p className="mt-2">Total Duration: {formatDuration(flightDetails.itineraries[0].duration)}</p>
-                                        <p className="mt-2">Number of Stops: {flightDetails.itineraries[0].segments.length - 1}</p>
-                                    </div>
                                 </div>
                             </ModalBody>
                             <ModalFooter>
-                                <Button
-                                    color="danger"
-                                    variant="light"
-                                    onPress={handleModalClose}
-                                >
+                                <Button color="danger" variant="light" onPress={handleModalClose}>
                                     Close
                                 </Button>
                             </ModalFooter>
@@ -299,6 +317,8 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
                     )}
                 </ModalContent>
             </Modal>
+
+
         </>
     );
 };

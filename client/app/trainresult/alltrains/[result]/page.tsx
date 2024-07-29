@@ -7,16 +7,16 @@ import {
     TableBody,
     TableRow,
     TableCell,
-} from "@nextui-org/react";
-import {
+    Divider,
     Modal,
     ModalContent,
     ModalHeader,
     ModalBody,
     ModalFooter,
     Button,
-    useDisclosure,
+    useDisclosure
 } from "@nextui-org/react";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import loadingAnimation from "@/lottie/loader.json";
@@ -30,6 +30,7 @@ const TrainResult = () => {
     const from = searchParams.get("from");
     const to = searchParams.get("to");
     const date = searchParams.get("date");
+    const { user } = useKindeBrowserClient();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -52,6 +53,57 @@ const TrainResult = () => {
         const [hours, minutes] = time.split(":").map(Number);
         return hours * 60 + minutes;
     };
+
+    const handleDataSendForTrainHistory = useCallback(async (train_no: any) => {
+        try {
+            // Fetch train name from Indian Rail API
+            const trainNameResponse = await fetch(`https://indianrailapi.com/api/v2/TrainNumberToName/apikey/${process.env.Train_Api_Key}/TrainNumber/${train_no}`);
+
+            if (!trainNameResponse.ok) {
+                console.error("Failed to fetch train name from API");
+                return;
+            }
+
+            const trainNameData = await trainNameResponse.json();
+
+            // Validate response and extract train name
+            if (trainNameData.ResponseCode !== 200) {
+                console.error("API returned non-success response code");
+                return;
+            }
+
+            const train_name = trainNameData.TrainName;
+
+            // Send data to server for saving in train history
+            const saveResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/auth/savetotrainhistory`, {
+                method: "POST", // Use POST method for sending data
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: user?.id,
+                    train_no: train_no,
+                    train_name: train_name
+                })
+            });
+
+            if (!saveResponse.ok) {
+                console.error("Failed to save search query");
+                return;
+            }
+
+            const saveData = await saveResponse.json();
+
+            // Check save status
+            if (saveData.status) {
+                console.log("Search query saved successfully", saveData);
+            } else {
+                console.error("Failed to save search query", saveData.message);
+            }
+        } catch (e) {
+            console.error("Error in train history handling", e);
+        }
+    }, [user]);
 
     const handleSearchTrain = useCallback(async () => {
         const formatedDate = formatDate(date);
@@ -101,14 +153,18 @@ const TrainResult = () => {
                 );
                 if (response.ok) {
                     const data = await response.json();
+                    console.log(data);
                     setTrainRoute(data.data);
                     setRouteLoading(false);
                 }
             } catch (error) {
                 console.error("Fetch failed", error);
             }
+            finally {
+                handleDataSendForTrainHistory(train_no);
+            }
         },
-        [setTrainRoute]
+        [setTrainRoute, handleDataSendForTrainHistory]
     );
 
     const handleFetchLivedata = async (train_no: any) => {
@@ -136,6 +192,9 @@ const TrainResult = () => {
         } catch (error) {
             console.log(error);
         }
+        finally {
+            handleDataSendForTrainHistory(train_no);
+        }
     };
 
     const handleModalClose = () => {
@@ -158,17 +217,17 @@ const TrainResult = () => {
             <NextTopLoader />
             <div className="font-Montserrat bg-[#000435] min-h-screen z-40 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-300 [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-track]:rounded-full">
                 {isLoading ? (
-                    <div className="pt-[13rem]">
-                        <Lottie className="h-80" animationData={loadingAnimation} />
+                    <div className="pt-[13rem] flex justify-center items-center h-full">
+                        <Lottie className="h-40 md:h-80" animationData={loadingAnimation} />
                     </div>
                 ) : (
                     <div>
                         {showNoTrain ? (
-                            <div className="max-h-screen">
-                                <Lottie className="h-[40rem] pt-28" animationData={notFoundAnimation} />
+                            <div className="max-h-screen flex justify-center items-center">
+                                <Lottie className="h-[20rem] md:h-[40rem] pt-10 md:pt-28" animationData={notFoundAnimation} />
                             </div>
                         ) : (
-                            <div className="pt-32 pb-20">
+                            <div className="pt-16 md:pt-32 pb-20 px-4 md:px-20">
                                 {trainResult.map((train, index) => {
                                     const {
                                         train_no,
@@ -185,47 +244,52 @@ const TrainResult = () => {
                                     return (
                                         <section
                                             key={index}
-                                            className="mt-5 ml-20 mr-20 border p-4 rounded-md border-blue-950 shadow-gray-500 shadow-md"
+                                            className="mt-5 border p-4 rounded-md border-blue-950 shadow-gray-500 shadow-md"
                                         >
-                                            <div className="flex font-semibold text-yellow-500">
-                                                <h1 className="w-[600px]">
+                                            <div className="flex flex-col md:flex-row font-semibold text-yellow-500">
+                                                <h1 className="md:w-[600px] text-lg md:text-xl mb-2 md:mb-0">
                                                     {train_name} ({train_no})
                                                 </h1>
-                                                <h2 className="mr-[300px]">Runs on : {renderRunningDays(running_days)}</h2>
+                                                <h2 className="md:mr-[300px] text-sm md:text-base mb-2 md:mb-0">
+                                                    Runs on : {renderRunningDays(running_days)}
+                                                </h2>
                                                 <h3
                                                     onClick={() => handleGetTrainRoute({ train_no })}
-                                                    className="text-blue-500 hover:underline cursor-pointer"
+                                                    className="text-blue-500 hover:underline cursor-pointer text-sm md:text-base"
                                                 >
                                                     Train Route
                                                 </h3>
                                             </div>
-                                            <div className="mt-5 flex">
-                                                <h4 className="w-[600px]">
+                                            <div className="mt-3 md:mt-5 flex flex-col md:flex-row text-sm md:text-base">
+                                                <h4 className="md:w-[600px]">
                                                     {from_time} | {from_stn_name}
                                                 </h4>
-                                                <p className="mr-[250px]">
-                                                    ---------- {travel_time} ----------
+                                                <p className="md:mr-[250px] items-center space-x-3 my-2 md:my-0 flex">
+                                                    <div className="border border-gray-500 w-16 h-0"></div>
+                                                    <span>{travel_time}</span>
+                                                    <div className="border border-gray-500 w-16 h-0"></div>
+
                                                 </p>
                                                 <h5>
                                                     {to_time} | {to_stn_name}
                                                 </h5>
                                             </div>
-                                            <div className="space-x-5 mt-5">
-                                                <Button radius="md">Second Sitting (2S)</Button>
-                                                <Button radius="md">Sleeper (SL)</Button>
-                                                <Button radius="md">AC Chair Car (CC)</Button>
-                                                <Button radius="md">AC First Class (1A)</Button>
-                                                <Button radius="md">AC 2 Tier (2A)</Button>
-                                                <Button radius="md">AC 3 Tier (3A)</Button>
-                                                <Button radius="md">AC 3 Economy (3E)</Button>
+                                            <div className="space-x-0 space-y-2 md:space-x-5 md:space-y-0 mt-5 flex flex-col md:flex-row">
+                                                <Button radius="md" className="text-xs md:text-sm">Second Sitting (2S)</Button>
+                                                <Button radius="md" className="text-xs md:text-sm">Sleeper (SL)</Button>
+                                                <Button radius="md" className="text-xs md:text-sm">AC Chair Car (CC)</Button>
+                                                <Button radius="md" className="text-xs md:text-sm">AC First Class (1A)</Button>
+                                                <Button radius="md" className="text-xs md:text-sm">AC 2 Tier (2A)</Button>
+                                                <Button radius="md" className="text-xs md:text-sm">AC 3 Tier (3A)</Button>
+                                                <Button radius="md" className="text-xs md:text-sm">AC 3 Economy (3E)</Button>
                                             </div>
-                                            <div className="mt-5 text-gray-500 flex items-center space-x-5">
-                                                <p className="text-small">
+                                            <div className="mt-5 text-gray-500 flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-5">
+                                                <p className="text-xs md:text-sm text-center md:text-left">
                                                     Please check NTES website or NTES app for actual time before boarding
                                                 </p>
                                                 <button
                                                     onClick={() => handleFetchLivedata({ train_no })}
-                                                    className="cursor-pointer rounded-md relative group overflow-hidden border-2 px-6 py-1 border-green-500"
+                                                    className="cursor-pointer rounded-md relative group overflow-hidden border-2 px-4 md:px-6 py-1 border-green-500"
                                                 >
                                                     <span className="font-bold text-white text-md relative z-10 group-hover:text-green-500 duration-500">
                                                         See live location
