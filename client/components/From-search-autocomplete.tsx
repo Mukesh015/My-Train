@@ -5,7 +5,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import axios, { CancelTokenSource } from 'axios';
 import { getAmadeusData } from "@/app/api/amadues.api";
-import { debounce, values } from "lodash";
+import { debounce } from "lodash";
 
 interface SearchProps {
   airportCode: string;
@@ -52,10 +52,10 @@ const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<OptionType[]>([]);
-  const [search, setSearch] = useState<string>('');
-  const [keyword, setKeyword] = useState<string>('');
+  const [search, setSearch] = useState<string>(props.value);
+  const [keyword, setKeyword] = useState<string>(props.value);
   const [loading, setLoading] = useState<boolean>(false);
-  console.log("From searched values", search)
+
   const debounceLoadData = useCallback(debounce((value: string) => {
     setKeyword(value);
   }, 1000), []);
@@ -103,6 +103,10 @@ const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
     };
   }, [keyword, props.search]);
 
+  useEffect(() => {
+    setSearch(props.value);
+  }, [props.value]);
+
   const { city, airport } = props.search;
   const label = city && airport ? "City and Airports" : city ? "City" : airport ? "Airports" : "";
 
@@ -140,7 +144,7 @@ const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
           onChange={(e) => {
             e.preventDefault();
             setSearch(e.target.value);
-          
+            props.setValue(e.target.value); // Sync the input value with the prop value
           }}
           variant="outlined"
           className={classes.textField}

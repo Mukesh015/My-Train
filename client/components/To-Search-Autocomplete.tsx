@@ -52,8 +52,8 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<OptionType[]>([]);
-  const [search, setSearch] = useState<string>('');
-  const [keyword, setKeyword] = useState<string>('');
+  const [search, setSearch] = useState<string>(props.value);
+  const [keyword, setKeyword] = useState<string>(props.value);
   const [loading, setLoading] = useState<boolean>(false);
 
   const debounceLoadData = useCallback(debounce((value: string) => {
@@ -103,6 +103,10 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
     };
   }, [keyword, props.search]);
 
+  useEffect(() => {
+    setSearch(props.value);
+  }, [props.value]);
+
   const { city, airport } = props.search;
   const label = city && airport ? "City and Airports" : city ? "City" : airport ? "Airports" : "";
 
@@ -139,7 +143,8 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
           {...params}
           onChange={(e) => {
             e.preventDefault();
-            setSearch(e.target.value); 
+            setSearch(e.target.value);
+            props.setValue(e.target.value); // Sync the input value with the prop value
           }}
           variant="outlined"
           className={classes.textField}
@@ -148,7 +153,6 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
             ...params.inputProps,
             value: search
           }}
-
           InputProps={{
             ...params.InputProps,
             endAdornment: (
