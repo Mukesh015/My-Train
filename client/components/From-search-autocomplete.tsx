@@ -20,6 +20,8 @@ interface SearchProps {
     keyword: string;
     page: number;
   }>>;
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface OptionType {
@@ -31,8 +33,8 @@ interface OptionType {
 const useStyles = makeStyles((theme) => ({
   textField: {
     '& .MuiOutlinedInput-root': {
-      borderRadius: 10, // Makes the TextField rounded
-      backgroundColor: 'white', // Sets the background color to white
+      borderRadius: 10,
+      backgroundColor: 'white',
       '& fieldset': {
         borderColor: theme.palette.grey[400],
       },
@@ -50,8 +52,8 @@ const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<OptionType[]>([]);
-  const [search, setSearch] = useState<string>('');
-  const [keyword, setKeyword] = useState<string>('');
+  const [search, setSearch] = useState<string>(props.value);
+  const [keyword, setKeyword] = useState<string>(props.value);
   const [loading, setLoading] = useState<boolean>(false);
 
   const debounceLoadData = useCallback(debounce((value: string) => {
@@ -101,6 +103,10 @@ const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
     };
   }, [keyword, props.search]);
 
+  useEffect(() => {
+    setSearch(props.value);
+  }, [props.value]);
+
   const { city, airport } = props.search;
   const label = city && airport ? "City and Airports" : city ? "City" : airport ? "Airports" : "";
 
@@ -115,29 +121,30 @@ const FromSearchAutocomplete: React.FC<SearchProps> = (props) => {
       onClose={() => {
         setOpen(false);
       }}
-      getOptionSelected={(option, value) =>
-        option.name === value.name && option.type === value.type
-      }
+      getOptionSelected={(option, value) => option.name === value.name}
       onChange={(e, value: OptionType | null) => {
         if (value) {
           props.setSearch((p) => ({ ...p, keyword: value.name, page: 0 }));
           setSearch(value.name);
           props.setAirportCode(value.airportCode);
+          props.setValue(value.name); // Update the value prop
         } else {
           setSearch("");
           props.setSearch((p) => ({ ...p, keyword: "a", page: 0 }));
+          props.setValue(""); // Update the value prop
         }
       }}
       getOptionLabel={(option: OptionType) => option.name}
       options={options}
       loading={loading}
+      value={options.find((option) => option.name === props.value) || { name: props.value, type: '', airportCode: '' }} // Control the value of the Autocomplete
       renderInput={(params) => (
         <TextField
           {...params}
-
           onChange={(e) => {
             e.preventDefault();
             setSearch(e.target.value);
+            props.setValue(e.target.value); // Sync the input value with the prop value
           }}
           variant="outlined"
           className={classes.textField}

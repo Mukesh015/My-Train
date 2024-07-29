@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node build/api/index.js",
-    "dev": "tsc-watch --onSuccess \"npm start\""
+    "dev:server": "ts-node src/index.ts",
+    "build": "tsc"
   },
   "license": "MIT",
   "devDependencies": {
@@ -13,12 +13,14 @@
     "@types/cors": "^2.8.17",
     "prisma": "^5.17.0",
     "tsc-watch": "^6.2.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
     "@prisma/client": "^5.17.0",
     "@tinyhttp/cookie-parser": "^2.0.6",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.12",
     "amadeus": "^10.1.0",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
@@ -30,6 +32,7 @@
     "express": "^4.19.2",
     "graphql": "^16.9.0",
     "newsapi": "^2.4.1",
+    "ts-node": "^10.9.2",
     "user-agents": "^1.1.274"
   }
 }

@@ -1,4 +1,4 @@
-import { prisma } from "../api";
+import { prisma } from "..";
 import { Request, Response } from 'express';
 
 export async function signup(req: Request, res: Response) {
