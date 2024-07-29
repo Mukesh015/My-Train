@@ -17,6 +17,8 @@ import { FlightCards } from "@/components/skeleton";
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
 import { Counter } from "@/components/ui/counter";
 import SearchCheckboxes from "@/components/search-checkbox";
+import airports from "@/data/airports.json"
+
 
 interface SearchState {
   keyword: string;
@@ -24,7 +26,10 @@ interface SearchState {
   airport: boolean;
   page: number;
 }
-
+interface CityState {
+  city: string;
+  code: string;
+}
 const SearchRoot: React.FC = () => {
 
   const words = [
@@ -69,6 +74,14 @@ const SearchRoot: React.FC = () => {
   const [fromValue, setFromValue] = useState<string>("");
   const [toValue, setToValue] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [fromCity, setFromCity] = useState<CityState | undefined>(undefined)
+  const [tocity, setToCity] = useState<CityState | undefined>(undefined)
+
+  const getCityByCode = (code: any) => {
+    const airport = airports.find(a => a.code === code);
+    return airport ? airport.city : 'Unknown';
+  };
+
 
   const swapValues = () => {
 
@@ -90,8 +103,10 @@ const SearchRoot: React.FC = () => {
   };
 
   const handleSearchFlight = useCallback(async () => {
+    setFromCity({ "city": getCityByCode(sourceCode), code: sourceCode });
+    setToCity({ "city": getCityByCode(destinationCode), code: destinationCode })
     router.push(`/flight/SourceCode:${sourceCode} DestinationCode:${destinationCode} selectedDate:${formatDate(date)} adult:${adult} children:${children} infants:${infants}`);
-  }, [sourceCode, destinationCode, date, adult, children, infants, router]);
+  }, [sourceCode, destinationCode, date, adult, children, infants, router, setToCity, setFromCity]);
 
   const handleTraveller = useCallback(() => {
     setIsTraveller(isTraveller => !isTraveller);
@@ -202,7 +217,7 @@ const SearchRoot: React.FC = () => {
             </div>
 
             <SearchCheckboxes search={search} setSearch={setSearch} />
-            
+
             <button
               onClick={() => handleSearchFlight()}
               className="ml-20 mt-10 py-2 px-14 text-black text-base font-bold nded-full overflow-hidden bg-rose-500 rounded-full transition-all duration-400 ease-in-out shadow-md hover:scale-105 hover:text-white hover:shadow-lg active:scale-90 before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-blue-500 before:to-blue-300 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-full hover:before:left-0"
@@ -223,7 +238,7 @@ const SearchRoot: React.FC = () => {
             </div>
           </div>
         </div>
-     
+
       </main >
     </>
   );

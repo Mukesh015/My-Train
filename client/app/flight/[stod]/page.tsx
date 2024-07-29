@@ -24,7 +24,10 @@ interface Props {
     };
 }
 
-
+interface flightStod {
+    number: string;
+    carrier: string;
+}
 const ChannelPage: React.FC<Props> = ({ params }) => {
 
     const [showNoFlight, setShowNoFlight] = useState<boolean>(false);
@@ -41,7 +44,7 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
     const [loading, setLoading] = useState<boolean>(false)
     const router = useRouter()
     const [flightDetails, setFlightDetails] = useState<any>(null);
-
+    const [flightinfo, setFlightInfo] = useState<flightStod | undefined>(undefined)
     const handleModify = useCallback((newValue: boolean) => {
         setIsOpenModifySearch(newValue)
     }, [setIsOpenModifySearch, isOpenModifySearch])
@@ -67,9 +70,18 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
     const handleFlightDetails = useCallback(async (id: any) => {
         const flight = response.find((flight: { id: any; }) => flight.id === id);
         setFlightDetails(flight);
-        console.log(flightDetails)
+
         setIsOpenFlightDetails(true);
-    }, [response, setFlightDetails, flightDetails, setIsOpenFlightDetails]);
+        const extractedInfo = flight.flatMap((flight: { itineraries: any[]; }) =>
+            flight.itineraries.flatMap(itinerary =>
+                itinerary.segments.map((segment: { number: any; carrierCode: any; }) => ({
+                    number: segment.number,
+                    carrierCode: segment.carrierCode
+                }))
+            )
+        );
+        setFlightInfo({ "carrier": extractedInfo.number, "number": extractedInfo.number })
+    }, [response, setFlightDetails, flightDetails, setIsOpenFlightDetails, setFlightInfo]);
 
     const getCityByCode = (code: any) => {
         const airport = airports.find(a => a.code === code);
