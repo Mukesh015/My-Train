@@ -9,6 +9,7 @@ import AuthRouter from './routes/auth';
 import home from "./routes/home";
 import gettrain from "./routes/getTrains";
 import { PrismaClient } from '@prisma/client'
+export const prisma = new PrismaClient();
 
 async function init() {
 
@@ -43,6 +44,5 @@ async function init() {
     });
 }
 
-export const prisma = new PrismaClient();
 
 init()
