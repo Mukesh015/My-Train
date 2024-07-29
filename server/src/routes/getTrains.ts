@@ -4,6 +4,7 @@ import fetch from "node-fetch"; // Ensure 'node-fetch' is installed via npm
 const UserAgent = require("user-agents")
 import Prettify from "../utils/prettify"; // Assuming Prettify is a TypeScript file
 import cheerio from 'cheerio';
+import axios from "axios";
 
 const prettify = new Prettify();
 const router = Router();
@@ -127,4 +128,18 @@ router.get("/pnrstatus", async (req: Request, resp: Response) => {
   }
 });
 
+
+
+router.get("/gettrainname", async (req: Request, resp: Response) => {
+
+  const trainNo = req.query.trainNo as string;
+  const URL_Train = `https://indianrailapi.com/api/v2/TrainNumberToName/apikey/${process.env.RAPID_API_KEY}/TrainNumber/${trainNo}`;
+  try {
+    const response =await axios.get(URL_Train);
+    console.log(response.data);
+    resp.json(response.data);
+  } catch (error: any) {
+    console.log(error);
+  }
+})
 export default router;
