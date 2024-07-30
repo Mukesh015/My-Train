@@ -63,7 +63,7 @@ const SearchCheckboxes: React.FC<SearchCheckboxesProps> = ({ search, setSearch }
   };
 
   return (
-    <div className='mt-4 ml-1 space-y-1 font-Montserrat'>
+    <div className='mt-2 ml-1 space-y-1 font-Montserrat'>
       <div>
         <FormControlLabel
           control={

@@ -54,26 +54,11 @@ const TrainResult = () => {
         return hours * 60 + minutes;
     };
 
-    const handleDataSendForTrainHistory = useCallback(async (train_no: any) => {
+    const handleDataSendForTrainHistory = useCallback(async (train_no: any, train_name: any) => {
         try {
-            // Fetch train name from Indian Rail API
-            const trainNameResponse = await fetch(`https://indianrailapi.com/api/v2/TrainNumberToName/apikey/${process.env.Train_Api_Key}/TrainNumber/${train_no}`);
-
-            if (!trainNameResponse.ok) {
-                console.error("Failed to fetch train name from API");
-                return;
+            if (!train_no || !train_name) {
+                return ({ response: "Parameter can not be empty", status: 400 });
             }
-
-            const trainNameData = await trainNameResponse.json();
-
-            // Validate response and extract train name
-            if (trainNameData.ResponseCode !== 200) {
-                console.error("API returned non-success response code");
-                return;
-            }
-
-            const train_name = trainNameData.TrainName;
-
             // Send data to server for saving in train history
             const saveResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/auth/savetotrainhistory`, {
                 method: "POST", // Use POST method for sending data
@@ -82,7 +67,7 @@ const TrainResult = () => {
                 },
                 body: JSON.stringify({
                     id: user?.id,
-                    train_no: train_no,
+                    train_no: train_no.train_no,
                     train_name: train_name
                 })
             });
@@ -139,7 +124,7 @@ const TrainResult = () => {
     }, [from, to, setTrainResult, setShowNoTrain, setIsLoading]);
 
     const handleGetTrainRoute = useCallback(
-        async (train_no: any) => {
+        async (train_no: any, train_name: any) => {
             onOpen();
             try {
                 const response = await fetch(
@@ -153,7 +138,6 @@ const TrainResult = () => {
                 );
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
                     setTrainRoute(data.data);
                     setRouteLoading(false);
                 }
@@ -161,13 +145,13 @@ const TrainResult = () => {
                 console.error("Fetch failed", error);
             }
             finally {
-                handleDataSendForTrainHistory(train_no);
+                handleDataSendForTrainHistory(train_no, train_name);
             }
         },
         [setTrainRoute, handleDataSendForTrainHistory]
     );
 
-    const handleFetchLivedata = async (train_no: any) => {
+    const handleFetchLivedata = async (train_no: any, train_name: any) => {
         onOpen();
         try {
             const response = await fetch(
@@ -185,7 +169,6 @@ const TrainResult = () => {
                 setCurrentStation(data.message);
                 setISLiveModalVisible(true);
                 setRouteLoading(false);
-                console.log(data);
             } else {
                 console.log("No data available");
             }
@@ -193,7 +176,7 @@ const TrainResult = () => {
             console.log(error);
         }
         finally {
-            handleDataSendForTrainHistory(train_no);
+            handleDataSendForTrainHistory(train_no, train_name);
         }
     };
 
@@ -254,7 +237,7 @@ const TrainResult = () => {
                                                     Runs on : {renderRunningDays(running_days)}
                                                 </h2>
                                                 <h3
-                                                    onClick={() => handleGetTrainRoute({ train_no })}
+                                                    onClick={() => handleGetTrainRoute({ train_no }, train_name)}
                                                     className="text-blue-500 hover:underline cursor-pointer text-sm md:text-base"
                                                 >
                                                     Train Route
@@ -264,12 +247,11 @@ const TrainResult = () => {
                                                 <h4 className="md:w-[600px]">
                                                     {from_time} | {from_stn_name}
                                                 </h4>
-                                                <p className="md:mr-[250px] items-center space-x-3 my-2 md:my-0 flex">
+                                                <div className="md:mr-[250px] items-center space-x-3 my-2 md:my-0 flex">
                                                     <div className="border border-gray-500 w-16 h-0"></div>
                                                     <span>{travel_time}</span>
                                                     <div className="border border-gray-500 w-16 h-0"></div>
-
-                                                </p>
+                                                </div>
                                                 <h5>
                                                     {to_time} | {to_stn_name}
                                                 </h5>
@@ -288,7 +270,7 @@ const TrainResult = () => {
                                                     Please check NTES website or NTES app for actual time before boarding
                                                 </p>
                                                 <button
-                                                    onClick={() => handleFetchLivedata({ train_no })}
+                                                    onClick={() => handleFetchLivedata({ train_no }, train_name)}
                                                     className="cursor-pointer rounded-md relative group overflow-hidden border-2 px-4 md:px-6 py-1 border-green-500"
                                                 >
                                                     <span className="font-bold text-white text-md relative z-10 group-hover:text-green-500 duration-500">

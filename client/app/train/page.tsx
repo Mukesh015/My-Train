@@ -1,7 +1,7 @@
 "use client";
 
 import { Input, Spinner } from "@nextui-org/react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { lazy, useCallback, useEffect, useState } from "react";
 import { Checkbox } from "@nextui-org/react";
 import { DatePicker } from "@nextui-org/react";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
@@ -13,7 +13,7 @@ import stationData from "@/data/stationcode.json";
 import { TrainCards } from "@/components/skeleton"
 import NextTopLoader from 'nextjs-toploader';
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-
+// const TrainComponent = lazy(() => import("@/components/skeleton").then((module) => import(`${module.TrainCards}`)))
 
 // Station interfaces
 interface Station {
@@ -161,7 +161,7 @@ export default function TrainPage() {
 
   const handleToggleStations = () => {
     const svg = document.getElementById("toggle-svg");
-    svg?.classList.toggle("-rotate-90");
+    svg?.classList.toggle("rotate-90");
     const tempFrom = fromStation;
     const tempTo = toStation;
     setFromStation(tempTo);
@@ -209,7 +209,7 @@ export default function TrainPage() {
             >
               <svg
                 id="toggle-svg"
-                className="p-1 duration-700 ease-in-out rotate-90"
+                className="p-1 duration-300 ease-in-out -rotate-90"
                 xmlns="http://www.w3.org/2000/svg"
                 height="35px"
                 viewBox="0 -960 960 960"
@@ -328,7 +328,7 @@ export default function TrainPage() {
               <TypewriterEffectSmooth words={words} />
               <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4"></div>
             </div>
-            <div className="h-auto md:h-[30rem]  py-2">
+            <div className="h-auto md:h-[30rem] py-2">
               <LayoutGrid cards={TrainCards} />
             </div>
           </div>

@@ -3,7 +3,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
-import axios, { CancelTokenSource } from 'axios';
+import axios, { CancelTokenSource } from "axios";
 import { getAmadeusData } from "@/app/api/amadues.api";
 import { debounce } from "lodash";
 
@@ -14,12 +14,14 @@ interface SearchProps {
     city: boolean;
     airport: boolean;
   };
-  setSearch: React.Dispatch<React.SetStateAction<{
-    city: boolean;
-    airport: boolean;
-    keyword: string;
-    page: number;
-  }>>;
+  setSearch: React.Dispatch<
+    React.SetStateAction<{
+      city: boolean;
+      airport: boolean;
+      keyword: string;
+      page: number;
+    }>
+  >;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -30,20 +32,35 @@ interface OptionType {
   airportCode: string;
 }
 
+// Styles for TextField and Autocomplete components
 const useStyles = makeStyles((theme) => ({
   textField: {
-    '& .MuiOutlinedInput-root': {
+    "& .MuiOutlinedInput-root": {
       borderRadius: 10,
-      backgroundColor: 'white',
-      '& fieldset': {
+      backgroundColor: "white",
+      "& fieldset": {
         borderColor: theme.palette.grey[400],
       },
-      '&:hover fieldset': {
+      "&:hover fieldset": {
         borderColor: theme.palette.grey[600],
       },
-      '&.Mui-focused fieldset': {
+      "&.Mui-focused fieldset": {
         borderColor: theme.palette.primary.main,
       },
+    },
+  },
+  inputBase: {
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "0.875rem", // Smaller font size for mobile
+      padding: "10px 12px", // Adjust padding for smaller devices
+    },
+  },
+  autoComplete: {
+    [theme.breakpoints.down("sm")]: {
+      width: "100%", // Full width on mobile
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: "418px", // Default width for larger screens
     },
   },
 }));
@@ -56,9 +73,13 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
   const [keyword, setKeyword] = useState<string>(props.value);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const debounceLoadData = useCallback(debounce((value: string) => {
-    setKeyword(value);
-  }, 1000), []);
+  // Debounce function for keyword input
+  const debounceLoadData = useCallback(
+    debounce((value: string) => {
+      setKeyword(value);
+    }, 1000),
+    []
+  );
 
   useEffect(() => {
     debounceLoadData(search);
@@ -70,17 +91,22 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
 
     const fetchData = async () => {
       try {
-        const { out, source: cancelSource } = getAmadeusData({ ...props.search, keyword });
+        const { out, source: cancelSource } = getAmadeusData({
+          ...props.search,
+          keyword,
+        });
         source = cancelSource;
 
         const res = await out;
 
         if (!res.data.code) {
-          setOptions(res.data.data.map((i: any) => ({
-            type: i.subType,
-            name: i.name,
-            airportCode: i.iataCode
-          })));
+          setOptions(
+            res.data.data.map((i: any) => ({
+              type: i.subType,
+              name: i.name,
+              airportCode: i.iataCode,
+            }))
+          );
         }
       } catch (err) {
         if (axios.isCancel(err)) {
@@ -96,6 +122,7 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
 
     fetchData();
 
+    // Cleanup function to cancel request on component unmount
     return () => {
       if (source) {
         source.cancel("Component unmounted");
@@ -108,11 +135,12 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
   }, [props.value]);
 
   const { city, airport } = props.search;
-  const label = city && airport ? "City and Airports" : city ? "City" : airport ? "Airports" : "";
+  const label =
+    city && airport ? "City and Airports" : city ? "City" : airport ? "Airports" : "";
 
   return (
     <Autocomplete
-      className="w-[418px] font-Montserrat"
+      className={`w-full sm:w-[418px] font-Montserrat ${classes.autoComplete}`} // Responsive width
       id="asynchronous-demo"
       open={open}
       onOpen={() => {
@@ -137,7 +165,13 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
       getOptionLabel={(option: OptionType) => option.name}
       options={options}
       loading={loading}
-      value={options.find((option) => option.name === props.value) || { name: props.value, type: '', airportCode: '' }} // Control the value of the Autocomplete
+      value={
+        options.find((option) => option.name === props.value) || {
+          name: props.value,
+          type: "",
+          airportCode: "",
+        }
+      } // Control the value of the Autocomplete
       renderInput={(params) => (
         <TextField
           {...params}
@@ -147,11 +181,11 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
             props.setValue(e.target.value); // Sync the input value with the prop value
           }}
           variant="outlined"
-          className={classes.textField}
+          className={`${classes.textField} ${classes.inputBase}`} // Responsive input styling
           placeholder="To"
           inputProps={{
             ...params.inputProps,
-            value: search
+            value: search,
           }}
           InputProps={{
             ...params.InputProps,
@@ -160,7 +194,7 @@ const ToSearchAutocomplete: React.FC<SearchProps> = (props) => {
                 {loading && <CircularProgress color="inherit" size={20} />}
                 {params.InputProps.endAdornment}
               </>
-            )
+            ),
           }}
         />
       )}

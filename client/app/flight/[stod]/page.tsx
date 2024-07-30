@@ -15,7 +15,6 @@ import {
     ModalBody,
     ModalFooter,
     Button,
-    useDisclosure,
 } from "@nextui-org/react";
 import { getFlightstod } from '@/app/api/amadues.api'
 interface Props {
@@ -75,7 +74,6 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
         const airport = airports.find(a => a.code === code);
         return airport ? airport.city : 'Unknown';
     };
-
 
     useEffect(() => {
         var dateObj = new Date(selectedDate);
@@ -188,18 +186,18 @@ const ChannelPage: React.FC<Props> = ({ params }) => {
                                             return (
                                                 <section key={id} className="ml-20 mr-20 border p-4 mb-7 rounded-md border-blue-950 shadow-gray-500 shadow-md">
                                                     <div className="mt-5 flex">
-                                                        <h4 className="w-[600px]">
-                                                            {departure.iataCode} | {new Date(departure.at).toLocaleTimeString()}
+                                                        <h4 className="w-[500px] text-yellow-500">
+                                                            {`${getCityByCode(departure.iataCode)} ( ${departure.iataCode} ) | ${new Date(departure.at).toLocaleTimeString()}`}
                                                         </h4>
                                                         <div>
-                                                            <p className="flex items-center space-x-4 mr-[350px]">
-                                                                <span className="flex-1 text-center">--------</span>
+                                                            <p className="flex items-center space-x-4 mr-[270px]">
+                                                                <div className="border border-gray-500 w-16 h-0"></div>
                                                                 <p>{totalDuration}</p>
-                                                                <span className="flex-1 text-center">--------</span>
+                                                                <div className="border border-gray-500 w-16 h-0"></div>
                                                             </p>
                                                         </div>
-                                                        <h5>
-                                                            {lastSegment.arrival.iataCode} | {new Date(lastSegment.arrival.at).toLocaleTimeString()}
+                                                        <h5 className='text-yellow-500'>
+                                                            {`${getCityByCode(lastSegment.arrival.iataCode)} (${lastSegment.arrival.iataCode}) | ${new Date(lastSegment.arrival.at).toLocaleTimeString()}`}
                                                         </h5>
                                                     </div>
                                                     <div className="space-x-5 mt-5 flex ">
