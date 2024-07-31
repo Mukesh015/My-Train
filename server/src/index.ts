@@ -9,6 +9,7 @@ import AuthRouter from './routes/auth';
 import home from './routes/home';
 import gettrain from './routes/getTrains';
 import weatherRouter from './routes/weather'
+import webHookRouter from './routes/webhook';
 import { PrismaClient } from '@prisma/client';
 
 export const prisma = new PrismaClient();
@@ -55,6 +56,7 @@ async function init() {
     app.use("/auth", AuthRouter);
     app.use("/trains", gettrain);
     app.use("/weather", weatherRouter);
+    app.use("/webhook", webHookRouter);
 
     await prisma.$connect()
         .then(() => {

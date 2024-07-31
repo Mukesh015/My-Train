@@ -4,7 +4,9 @@
       "module": "commonjs",
       "outDir": "dist",   // Output directory for compiled JavaScript
       "strict": true,
+      "resolveJsonModule": true,                        /* Enable importing .json files. */
       "esModuleInterop": true
+      
   },
   "include": ["src"] // Include source directory for compilation
 }
