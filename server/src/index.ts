@@ -8,9 +8,10 @@ import router from './routes/flight';
 import AuthRouter from './routes/auth';
 import home from './routes/home';
 import gettrain from './routes/getTrains';
+import weatherRouter from './routes/weather'
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
 
 async function init() {
     const PORT: string | undefined = process.env.PORT;
@@ -53,6 +54,7 @@ async function init() {
     app.use("/", home);
     app.use("/auth", AuthRouter);
     app.use("/trains", gettrain);
+    app.use("/weather", weatherRouter);
 
     await prisma.$connect()
         .then(() => {

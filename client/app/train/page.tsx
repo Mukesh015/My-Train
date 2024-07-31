@@ -15,7 +15,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 
-// Station interfaces
+
 interface Station {
   name: string;
   code: string;
