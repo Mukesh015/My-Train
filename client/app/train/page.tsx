@@ -1,7 +1,7 @@
 "use client";
 
 import { Input, Spinner } from "@nextui-org/react";
-import React, { lazy, useCallback, useEffect, useState } from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Checkbox } from "@nextui-org/react";
 import { DatePicker } from "@nextui-org/react";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
@@ -10,10 +10,10 @@ import { DateValue, parseDate, getLocalTimeZone } from "@internationalized/date"
 import { useDateFormatter } from "@react-aria/i18n";
 import { useRouter } from "next/navigation";
 import stationData from "@/data/stationcode.json";
-import { TrainCards } from "@/components/skeleton"
+import { TrainCards, words } from "@/components/skeleton"
 import NextTopLoader from 'nextjs-toploader';
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-// const TrainComponent = lazy(() => import("@/components/skeleton").then((module) => import(`${module.TrainCards}`)))
+const TrainComponent = lazy(() => import("@/components/ui/historytable"))
 
 // Station interfaces
 interface Station {
@@ -27,28 +27,6 @@ interface StationData {
 
 export default function TrainPage() {
 
-  const words = [
-    {
-      text: "Serach",
-      className: "text-white",
-    },
-    {
-      text: "your",
-      className: "text-white",
-    },
-    {
-      text: "trains",
-      className: "text-white",
-    },
-    {
-      text: "with",
-      className: "text-white",
-    },
-    {
-      text: "Tourism.",
-      className: "text-blue-500 dark:text-blue-500",
-    },
-  ];
   const { user } = useKindeBrowserClient();
   const router = useRouter();
   const [showLoadingBtn, setShowLoadingBtn] = useState<boolean>(false);
@@ -174,8 +152,8 @@ export default function TrainPage() {
   return (
     <>
       <NextTopLoader />
-      <main className="font-Montserrat bg-[#000435] pb-[25px] h-screen overflow-hidden pt-10">
-        <div className="pt-16 pl-6 flex flex-col md:flex-row">
+      <main className="font-Montserrat bg-[#000435] pb-[25px] pt-10">
+        <div className="pt-16 pl-6 md:2xl:pl-24 flex flex-col md:flex-row">
           <div>
             <div className="flex w-full md:w-[450px] flex-col justify-center items-center px-2 md:px-4">
               <div className="flex w-full flex-wrap md:flex-nowrap mb-2 md:mb-0 mr-5 gap-2 md:gap-4 relative">
@@ -320,17 +298,22 @@ export default function TrainPage() {
               )}
             </button>
           </div>
-          <div className="ml-0 md:ml-[50px] mt-10">
-            <div className="flex flex-col items-center justify-center h-[5rem] space-y-2 md:space-y-0">
-              <p className="text-lime-600 dark:text-neutral-200 text-xs sm:text-base">
-                The road to freedom starts from here
-              </p>
-              <TypewriterEffectSmooth words={words} />
-              <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4"></div>
-            </div>
-            <div className="h-auto md:h-[30rem] py-2">
-              <LayoutGrid cards={TrainCards} />
-            </div>
+          <div className="md:2xl:ml-20">
+            <Suspense fallback={<div>Loading...</div>}>
+              <TrainComponent />
+            </Suspense>
+          </div>
+        </div>
+        <div className="ml-0 md:ml-[50px] mt-10">
+          <div className="flex flex-col items-center justify-center h-[5rem] space-y-2 md:space-y-0">
+            <p className="text-lime-600 dark:text-neutral-200 text-xs sm:text-base">
+              The road to freedom starts from here
+            </p>
+            <TypewriterEffectSmooth words={words} />
+            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4"></div>
+          </div>
+          <div className="h-auto md:h-[30rem] py-2">
+            <LayoutGrid cards={TrainCards} />
           </div>
         </div>
       </main>

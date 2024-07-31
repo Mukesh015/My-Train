@@ -41,6 +41,28 @@ const SkeletonFour = () => {
         </div>
     );
 };
+export const words = [
+    {
+        text: "Serach",
+        className: "text-white",
+    },
+    {
+        text: "your",
+        className: "text-white",
+    },
+    {
+        text: "trains",
+        className: "text-white",
+    },
+    {
+        text: "with",
+        className: "text-white",
+    },
+    {
+        text: "Tourism.",
+        className: "text-blue-500 dark:text-blue-500",
+    },
+];
 
 export const TrainCards = [
     {
