@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "prisma generate",
-    "start": "node build/index.js",
-    "dev": "tsc-watch --onSuccess \"npm start\""
+    "dev:server": "ts-node server.ts",
+    "build": "tsc"
   },
   "license": "MIT",
   "devDependencies": {
