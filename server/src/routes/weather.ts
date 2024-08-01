@@ -11,7 +11,7 @@ weatherRouter.get("/weather", async (req: Request, res: Response) => {
     const city = req.query.city as string;
     const date = req.query.date as string;
 
-    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=0ba74fcd1c9f86ead1c0f0db1597465c
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}
 &units=metric`;
 
     try {
@@ -28,7 +28,7 @@ weatherRouter.get("/weather", async (req: Request, res: Response) => {
         });
 
         if (forecast) {
-            console.log(`Forecast: `, forecast);
+        
             const temperature = forecast.main.temp;
             const weatherDescription = forecast.weather[0].description;
             const feelsLike=forecast.main.feels_like
