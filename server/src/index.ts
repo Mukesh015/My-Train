@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 dotenv.config({ path: "./.env" });
 import router from './routes/flight';
 import AuthRouter from './routes/auth';
-
+import home from './routes/home';
 import gettrain from './routes/getTrains';
 import weatherRouter from './routes/weather'
 import webHookRouter from './routes/webhook';
@@ -51,7 +51,7 @@ async function init() {
     });
 
     app.use("/flight", router);
-   
+    app.use("/", home);
     app.use("/auth", AuthRouter);
     app.use("/trains", gettrain);
     app.use("/weather", weatherRouter);
