@@ -16,29 +16,34 @@ function getStationCode(stationName: string, stationData: StationData): string |
 }
 
 export async function findTrains(req: Request, res: Response) {
-    const intent = req.body.queryResult.intent.displayName;
-    console.log("intent: " + intent);
-    if (intent === 'search.train') {
-        const parameters = req.body.queryResult.parameters;
-        const sourceStationName = parameters.Station[0];
-        const destinationStationName = parameters.Station[1];
+    try {
+        const intent = req.body.queryResult.intent.displayName;
+    
+        if (intent === 'search.train') {
+            const parameters = req.body.queryResult.parameters;
+            const sourceStationName = parameters.Station[0];
+            const destinationStationName = parameters.Station[1];
 
-        const sourceCode = getStationCode(sourceStationName, stationData as StationData);
-        const destinationCode = getStationCode(destinationStationName, stationData as StationData);
+            const sourceCode = getStationCode(sourceStationName, stationData as StationData);
+            const destinationCode = getStationCode(destinationStationName, stationData as StationData);
+            console.log(sourceCode, destinationCode)
+            if (sourceCode && destinationCode) {
 
-        if (sourceCode && destinationCode) {
-
-            res.json({
-                fulfillmentText: `Looking for trains from ${sourceStationName} (${sourceCode}) to ${destinationStationName} (${destinationCode}).`
-            });
+                res.json({
+                    fulfillmentText: `Looking for trains from ${sourceStationName} (${sourceCode}) to ${destinationStationName} (${destinationCode}).`
+                });
+            } else {
+                res.json({
+                    fulfillmentText: `I couldn't find the station codes for ${sourceStationName} or ${destinationStationName}.`
+                });
+            }
         } else {
             res.json({
-                fulfillmentText: `I couldn't find the station codes for ${sourceStationName} or ${destinationStationName}.`
+                fulfillmentText: `I'm sorry, I didn't understand the request.`
             });
         }
-    } else {
-        res.json({
-            fulfillmentText: `I'm sorry, I didn't understand the request.`
-        });
+    }
+    catch (err) {
+        res.json(err);
     }
 }
