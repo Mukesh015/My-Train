@@ -1,13 +1,18 @@
 "use client"
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Button } from "@nextui-org/react";
+import logo from "@/public/logo.jpeg"
+import Image from 'next/image'
+import { Console } from "console";
 
 export default function Navbar() {
 
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
     const router = useRouter();
     const { user } = useKindeBrowserClient();
     const [name, setName] = useState<string>('');
@@ -18,6 +23,7 @@ export default function Navbar() {
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const sidebarRef = useRef<HTMLDivElement>(null);
+    const [currentUrl, setCurrentUrl] = useState<string>('');
 
     const closeDropdown = () => {
         setShowDropdown(false);
@@ -72,6 +78,19 @@ export default function Navbar() {
     }, [setisLoggedin, user])
 
     useEffect(() => {
+        const url = `${pathname}?${searchParams}`;
+        const nav = document.getElementById("navbar");
+        if (nav) {
+            if (url.includes("/train")) {
+                nav.style.background = "#000435";
+                console.log("Triggered");
+            } else {
+                nav.style.background = "transparent";
+            }
+        }
+    }, [pathname, searchParams]);
+
+    useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             // @ts-ignore
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -96,10 +115,17 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="fixed w-screen bg-inherit top-0 bg-[#000435] opacity-100 z-50 font-Montserrat">
+            <nav id="navbar" className="fixed w-screen top-0 opacity-100 z-50 font-Montserrat">
                 <div className="flex items-center justify-between pl-4 md:pl-10 p-3">
                     <div className="flex items-center justify-center">
-                        <img className="rounded-full" height={50} width={50} src="https://99designs-blog.imgix.net/blog/wp-content/uploads/2022/05/Mastercard_2019_logo.svg-e1659036851269.png?auto=format&q=60&fit=max&w=930" alt="Logo" />
+                        {/* <img className="rounded-full" height={50} width={50} src={logo} alt="Logo" /> */}
+                        <Image
+                            className="rounded-full"
+                            src={logo}
+                            width={40}
+                            height={40}
+                            alt="Logo"
+                        />
                         <p className="font-bold ml-5 text-xl">TOURISM</p>
                     </div>
                     <ul className="hidden md:flex md:mr-20 md:ml-40 space-x-5">

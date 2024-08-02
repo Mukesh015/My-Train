@@ -14,6 +14,7 @@ import { TrainCards, words } from "@/components/skeleton"
 import NextTopLoader from 'nextjs-toploader';
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 const TrainComponent = lazy(() => import("@/components/ui/historytable"))
+import "../globals.css"
 
 // Station interfaces
 interface Station {
@@ -152,7 +153,7 @@ export default function TrainPage() {
   return (
     <>
       <NextTopLoader />
-      <main className="font-Montserrat bg-[#000435] pb-[25px] pt-10">
+      <main className="font-Montserrat bg-[#000435] pb-[25px] pt-20">
         <div className="pt-16 pl-6 md:2xl:pl-24 flex flex-col md:flex-row">
           <div>
             <div className="flex w-full md:w-[450px] flex-col justify-center items-center px-2 md:px-4">
@@ -304,7 +305,7 @@ export default function TrainPage() {
             </Suspense>
           </div>
         </div>
-        <div className="ml-0 md:ml-[50px] mt-10">
+        <div className="ml-0 md:ml-[50px] mt-20">
           <div className="flex flex-col items-center justify-center h-[5rem] space-y-2 md:space-y-0">
             <p className="text-lime-600 dark:text-neutral-200 text-xs sm:text-base">
               The road to freedom starts from here
