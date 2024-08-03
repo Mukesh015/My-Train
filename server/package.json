@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "prisma generate",
-    "dev:server": "ts-node server.ts",
+    "dev:server": "ts-node src/index.ts",
     "build": "tsc"
   },
   "license": "MIT",

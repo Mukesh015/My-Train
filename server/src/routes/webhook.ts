@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router} from "express";
 
 const webHookRouter: Router = Router();
 import {findTrains} from "../controllers/webhook"
