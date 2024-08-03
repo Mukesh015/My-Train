@@ -15,69 +15,68 @@ dotenv.config({ path: "./.env" });
 
 export const prisma = new PrismaClient();
 
-async function init() {
-    const PORT: string | undefined = process.env.PORT;
+const app = express();
 
-    if (!PORT) {
-        console.error("Environment variables and PORT must be provided.");
-        process.exit(1); 
-    }
+const PORT: string | undefined = process.env.PORT;
 
-    const app = express();
-
-    const corsOptions = {
-        origin: (origin: any, callback: any) => {
-            const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['*'];
-            if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-        allowedHeaders: ['Content-Type', 'Authorization']
-    };
-
-    app.use(cors(corsOptions));
-    app.use(cookieParser());
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: false }));
-    app.use(bodyParser.json());
-
-    app.use((req, res, next) => {
-        console.log('Origin:', req.headers.origin);
-        next();
-    });
-
-    app.use("/flight", router);
-    app.use("/", home);
-    app.use("/auth", AuthRouter);
-    app.use("/trains", gettrain);
-    app.use("/weather", weatherRouter);
-    app.use("/webhook", webHookRouter);
-
- 
-    app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-        console.error('Serverless Function:', err.message);
-        res.status(500).json({
-            success: false,
-            message: 'Internal Server Error',
-        });
-    });
-
-    // Connect to the database
-    try {
-        await prisma.$connect();
-        console.log('Connected to the database');
-    } catch (error) {
-        console.error('Error connecting to the database:', error);
-        process.exit(1); // Exit the process with an error code
-    }
-
-    // Start the server
-    app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
-    });
+if (!PORT) {
+    console.error("Environment variables and PORT must be provided.");
+    process.exit(1); 
 }
 
-init();
+const corsOptions = {
+    origin: (origin: any, callback: any) => {
+        const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['*'];
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.options("", cors(corsOptions));
+app.use((req, res, next) => {
+    console.log('Origin:', req.headers.origin);
+    next();
+});
+
+app.use("/flight", router);
+app.use("/", home);
+app.use("/auth", AuthRouter);
+app.use("/trains", gettrain);
+app.use("/weather", weatherRouter);
+app.use("/webhook", webHookRouter);
+
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error('Serverless Function:', err.message);
+    res.status(500).json({
+        success: false,
+        message: 'Internal Server Error',
+    });
+});
+
+// Connect to the database
+prisma.$connect()
+    .then(() => {
+        console.log('Connected to the database');
+        // Start the server
+        app.listen(PORT, () => {
+            console.log(`Server is running on http://localhost:${PORT}`);
+        });
+    })
+    .catch((error) => {
+        console.error('Error connecting to the database:', error);
+        process.exit(1); // Exit the process with an error code
+    });
+
+
+
+export default app
