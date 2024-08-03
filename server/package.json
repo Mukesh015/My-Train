@@ -4,15 +4,20 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "prisma generate",
-    "dev:server": "ts-node src/index.ts",
-    "build": "tsc"
+    "start": "nodemon src/index.ts",
+    "build": "rimraf dist && tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
+    "pre-commit": "^1.2.2",
     "prisma": "^5.17.0",
+    "rimraf": "^6.0.1",
     "tsc-watch": "^6.2.0",
     "typescript": "^5.5.4"
   },
@@ -35,5 +40,10 @@
     "newsapi": "^2.4.1",
     "ts-node": "^10.9.2",
     "user-agents": "^1.1.274"
-  }
+  },
+  "pre-commit": [
+      "ts.check",
+      "build",
+      "add-build"
+  ]
 }

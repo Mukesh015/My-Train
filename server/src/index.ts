@@ -20,7 +20,7 @@ async function init() {
 
     if (!PORT) {
         console.error("Environment variables and PORT must be provided.");
-        process.exit(1); // Exit the process with an error code
+        process.exit(1); 
     }
 
     const app = express();
@@ -56,9 +56,9 @@ async function init() {
     app.use("/weather", weatherRouter);
     app.use("/webhook", webHookRouter);
 
-    // Global error handler
+ 
     app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-        console.error('Unhandled Error:', err.message);
+        console.error('Serverless Function:', err.message);
         res.status(500).json({
             success: false,
             message: 'Internal Server Error',
