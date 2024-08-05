@@ -7,7 +7,6 @@ import {
     TableBody,
     TableRow,
     TableCell,
-    Divider,
     Modal,
     ModalContent,
     ModalHeader,
@@ -24,6 +23,8 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import dynamic from "next/dynamic";
 import notFoundAnimation from "@/lottie/trainnotfound.json";
 import NextTopLoader from "nextjs-toploader";
+import { useLocation } from "@/lib/cityprovider";
+
 
 const TrainResult = () => {
     const searchParams = useSearchParams();
@@ -33,8 +34,10 @@ const TrainResult = () => {
     const { user } = useKindeBrowserClient();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
-
+    const { source, destination, setSource, setDestination } = useLocation();
     const [currentStation, setCurrentStation] = useState<string>("");
+    const [fromWeatherData, setFromWeatherData] = useState<string>("")
+    const [toWeatherData, setToWeatherData] = useState<string>("");
     const [trainResult, setTrainResult] = useState([]);
     const [trainRoute, setTrainRoute] = useState([]);
     const [liveData, setLiveData] = useState([]);
@@ -166,6 +169,7 @@ const TrainResult = () => {
             if (response.ok) {
                 const data = await response.json();
                 setLiveData(data.data);
+                console.log(data);
                 setCurrentStation(data.message);
                 setISLiveModalVisible(true);
                 setRouteLoading(false);
@@ -180,6 +184,51 @@ const TrainResult = () => {
         }
     };
 
+    function getCityName(locationString: string): string {
+        const parenthesisIndex = locationString.indexOf('(');
+        if (parenthesisIndex === -1) {
+            return locationString.toLowerCase();
+        }
+        const cityName = locationString.substring(0, parenthesisIndex).trim();
+        return cityName.toLowerCase();
+    }
+
+    const handleFetchWeather = useCallback(async () => {
+        const sourceCity = getCityName(source);
+        const destinationCity = getCityName(destination);
+        try {
+            const response1 = await fetch(`https://my-tour-api.vercel.app/weather/weather/?city=${sourceCity}&date=${date}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (response1.ok) {
+                const data1 = await response1.json();
+                console.log(data1);
+                setFromWeatherData(data1);
+                try {
+                    const response2 = await fetch(`https://my-tour-api.vercel.app/weather/weather/?city=${destinationCity}&date=${date}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    if (response2.ok) {
+                        const data2 = await response2.json();
+                        console.log(data2);
+                        setToWeatherData(data2);
+                    }
+                } catch (e) {
+                    console.error("Fetch failed for destination city", e);
+                }
+            }
+
+        } catch (e) {
+            console.error("Fetch failed for source city", e);
+        }
+    }, [setFromWeatherData, setToWeatherData]);
+
     const handleModalClose = () => {
         onClose();
         setRouteLoading(true);
@@ -193,6 +242,7 @@ const TrainResult = () => {
 
     useEffect(() => {
         handleSearchTrain();
+        handleFetchWeather();
     }, [from, to, setTrainResult]);
 
     return (
@@ -304,7 +354,7 @@ const TrainResult = () => {
                                         <ModalBody>
                                             <div className="overflow-y-auto p-5 max-h-[400px]">
                                                 <ol className="relative border-l-2 border-gray-200 dark:border-gray-700">
-                                                    {liveData.map((station: any, index: number) => {
+                                                    {liveData?.map((station: any, index: number) => {
                                                         const { station_name, distance, timing, delay, is_current_station } =
                                                             station;
                                                         const [arrival, departure] = formatTiming(timing);

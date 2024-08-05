@@ -12,9 +12,12 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
+
     "prisma": "^5.17.0",
+ 
     "tsc-watch": "^6.2.0",
     "typescript": "^5.5.4"
+
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
@@ -35,5 +38,7 @@
     "newsapi": "^2.4.1",
     "ts-node": "^10.9.2",
     "user-agents": "^1.1.274"
+
   }
+
 }

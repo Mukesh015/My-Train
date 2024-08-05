@@ -7,13 +7,13 @@ dotenv.config({ path: "./.env" });
 const router: Router = Router();
 const API: string = `api`;
 
-// Amadeus client initialization
+
 const amadeus = new Amadeus({
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET
 });
 
-// Endpoint for airport search
+
 router.get(`/${API}/airports`, async (req, res) => {
   const { page, subType, keyword } = req.query;
   try {
