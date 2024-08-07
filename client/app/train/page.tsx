@@ -1,7 +1,7 @@
 "use client";
 
 import { Input, Spinner } from "@nextui-org/react";
-import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import React, { lazy, Suspense, useCallback, useState } from "react";
 import { Checkbox } from "@nextui-org/react";
 import { DatePicker } from "@nextui-org/react";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";

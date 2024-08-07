@@ -44,7 +44,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // app.options("", cors());
 app.use((req, res, next) => {
-    console.log('Origin:', req.headers.origin);
     next();
 });
 
