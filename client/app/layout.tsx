@@ -7,7 +7,8 @@ import NextTopLoader from "nextjs-toploader";
 import Navbar from "@/components/navbar";
 const inter = Inter({ subsets: ["latin"] });
 import { LocationProvider } from "@/lib/cityprovider";
-import DialogflowMessenger from "@/components/DialogflowMessenger";
+import { lazy, Suspense } from "react";
+const DialogflowMessenger = lazy(() => import("@/components/DialogflowMessenger"));
 
 export const metadata: Metadata = {
   title: "Tourism",
@@ -28,7 +29,9 @@ export default function RootLayout({
             <LocationProvider>
               <Navbar />
               {children}
-              <DialogflowMessenger />
+              <Suspense>
+                <DialogflowMessenger />
+              </Suspense>
             </LocationProvider>
           </StoreProvider>
         </UiProviders>

@@ -15,11 +15,13 @@ const DialogflowMessenger: React.FC = () => {
   }, []);
 
   return (
+    // @ts-ignore
     <df-messenger
       intent="WELCOME"
       chat-title="Tour-Guide-chat-bot"
       agent-id="aa68d465-6f42-4835-ac78-a05f84ac7d89"
       language-code="en"
+    // @ts-ignore
     ></df-messenger>
   );
 };
