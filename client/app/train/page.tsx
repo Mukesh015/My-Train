@@ -14,7 +14,6 @@ import { TrainCards, words } from "@/components/skeleton"
 import NextTopLoader from 'nextjs-toploader';
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 const TrainComponent = lazy(() => import("@/components/ui/historytable"))
-import { useLocation } from "@/lib/cityprovider";
 import "../globals.css"
 
 
@@ -28,7 +27,6 @@ interface StationData {
 }
 
 export default function TrainPage() {
-  const { setSource, setDestination } = useLocation();
   const { user } = useKindeBrowserClient();
   const router = useRouter();
   const [showLoadingBtn, setShowLoadingBtn] = useState<boolean>(false);
@@ -66,8 +64,6 @@ export default function TrainPage() {
     if (!fromStation && !toStation) {
       return;
     }
-    setSource(inputValue);
-    setDestination(toInputValue);
     setShowLoadingBtn(true);
     router.push(`/trainresult/alltrains/search?from=${fromStation}&to=${toStation}&date=${date}`);
     try {
@@ -91,7 +87,7 @@ export default function TrainPage() {
     } catch (e) {
       console.error("Fetch errror", e);
     }
-  }, [user, fromStation, toStation, setSource, setDestination]);
+  }, [user, fromStation, toStation]);
 
   const handleFromSuggestionClick = (suggestion: Station): void => {
     setInputValue(`${suggestion.name} (${suggestion.code})`);

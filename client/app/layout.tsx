@@ -6,7 +6,6 @@ import { UiProviders } from "@/components/providers";
 import NextTopLoader from "nextjs-toploader";
 import Navbar from "@/components/navbar";
 const inter = Inter({ subsets: ["latin"] });
-import { LocationProvider } from "@/lib/cityprovider";
 import { lazy, Suspense } from "react";
 const DialogflowMessenger = lazy(() => import("@/components/DialogflowMessenger"));
 
@@ -26,13 +25,11 @@ export default function RootLayout({
         <NextTopLoader />
         <UiProviders>
           <StoreProvider>
-            <LocationProvider>
-              <Navbar />
-              {children}
-              <Suspense>
-                <DialogflowMessenger />
-              </Suspense>
-            </LocationProvider>
+            <Navbar />
+            {children}
+            <Suspense>
+              <DialogflowMessenger />
+            </Suspense>
           </StoreProvider>
         </UiProviders>
       </body>

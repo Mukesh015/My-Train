@@ -214,7 +214,7 @@ const TrainResult = () => {
                             <div className="pt-16 md:pt-32 pb-20 px-4 md:px-20">
                                 <Suspense fallback={<p className="justify-center">weather deatils is loading please wait...</p>}>
                                     {/* @ts-ignore */}
-                                    <WeatherDetails date={date} />
+                                    <WeatherDetails />
                                 </Suspense>
                                 {trainResult.map((train, index) => {
                                     const {

@@ -1,11 +1,14 @@
-import { useLocation } from "@/lib/cityprovider";
 import dynamic from "next/dynamic";
 import React, { useCallback, useEffect, useState } from "react";
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import sunny from "../lottie/Animation - 1722963756766.json";
 import cloudy from "../lottie/Animation - 1722963832258.json";
-import heatwave from "../lottie/Animation - 1722964137404.json";
 import thunder from "../lottie/Animation - 1722964227245.json";
+import rainy from "../lottie/Animation - 1723049582065.json"
+import snow from "../lottie/Animation - 1723050322900.json"
+import notSure from "../lottie/Animation - 1723050817681.json"
+import stationData from "@/data/stationcode.json"
+import { useSearchParams } from "next/navigation";
 
 interface WeatherData {
     Temprature: number;
@@ -18,22 +21,24 @@ interface Props {
     date: string;
 }
 
-const WeatherDetails: React.FC<Props> = ({ date }) => {
-    const { source, destination } = useLocation();
+const WeatherDetails: React.FC<Props> = () => {
+
+    const searchParams = useSearchParams();
+    const from: string = searchParams.get("from") || "";
+    const to: string = searchParams.get("to") || "";
+    const date = searchParams.get("date");
     const [sourceWeatherData, setSourceWeatherData] = useState<WeatherData | null>(null);
     const [destinationWeatherData, setDestinationWeatherData] = useState<WeatherData | null>(null);
 
-    function getCityName(locationString: string): string {
-        const parenthesisIndex = locationString.indexOf("(");
-        if (parenthesisIndex === -1) {
-            return locationString.toLowerCase();
-        }
-        const cityName = locationString.substring(0, parenthesisIndex).trim();
-        return cityName.toLowerCase();
+    function getStationNameByCode(stationCode: string) {
+        const station = stationData.data.find((entry) => entry.code === stationCode);
+        return station ? station.name : `Station code '${stationCode}' not found`;
     }
 
     const handleFetchWeatherOfSourceCity = useCallback(
-        async (sourceCity: string) => {
+        async () => {
+            const sourceCity = getStationNameByCode(from).toLowerCase();
+            console.log(sourceCity);
             try {
                 const response = await fetch(
                     `https://my-tour-api.vercel.app/weather/weather/?city=${sourceCity}&date=${date}`,
@@ -55,11 +60,13 @@ const WeatherDetails: React.FC<Props> = ({ date }) => {
                 console.error("Fetch failed for source city", e);
             }
         },
-        [setSourceWeatherData]
+        [setSourceWeatherData, from]
     );
 
     const handleFetchWeatherOfDestinationCity = useCallback(
-        async (destinationCity: string) => {
+        async () => {
+            const destinationCity = getStationNameByCode(to).toLowerCase();
+            console.log(destinationCity);
             try {
                 const response = await fetch(
                     `https://my-tour-api.vercel.app/weather/weather/?city=${destinationCity}&date=${date}`,
@@ -81,35 +88,32 @@ const WeatherDetails: React.FC<Props> = ({ date }) => {
                 console.error("Fetch failed for destination city", e);
             }
         },
-        [setDestinationWeatherData]
+        [setDestinationWeatherData, to]
     );
 
-    useEffect(() => {
-        const sourceCity = getCityName(source);
-        const destinationCity = getCityName(destination);
-        if (sourceCity) {
-            handleFetchWeatherOfSourceCity(sourceCity);
-        }
-        if (destinationCity) {
-            handleFetchWeatherOfDestinationCity(destinationCity);
-        }
-    }, [handleFetchWeatherOfDestinationCity, handleFetchWeatherOfSourceCity]);
-
-    // Function to select the appropriate weather animation based on the weather description.
     const getWeatherAnimation = (weatherDescription: string) => {
         switch (weatherDescription.toLowerCase()) {
-            case "clear":
+            case "Clear":
                 return sunny;
-            case "cloudy":
+            case "Clouds":
                 return cloudy;
-            case "heatwave":
-                return heatwave;
-            case "thunderstorm":
+            case "Snow":
+                return snow;
+            case "Thunderstorm":
                 return thunder;
+            case "Rain":
+                return rainy
+            case "Drizzle":
+                return rainy
             default:
-                return cloudy;
+                return notSure;
         }
     };
+
+    useEffect(() => {
+        handleFetchWeatherOfSourceCity();
+        handleFetchWeatherOfDestinationCity();
+    }, [])
 
     return (
         <>
@@ -135,7 +139,7 @@ const WeatherDetails: React.FC<Props> = ({ date }) => {
                                         <path d="M480-480Zm0 280q-116 0-198-82t-82-198q0-116 82-198t198-82q116 0 198 82t82 198q0 116-82 198t-198 82Zm0-80q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Z" />
                                     </svg>
                                     <span>C</span>
-                                    <span className="ml-2">at {getCityName(source)}</span>
+                                    <span className="ml-2">at {getStationNameByCode(from).toLocaleUpperCase()}</span>
                                 </span>
                                 <span className="border w-0 h-4"></span>
                                 <span className="ml-3 flex items-center">
@@ -185,7 +189,7 @@ const WeatherDetails: React.FC<Props> = ({ date }) => {
                                         <path d="M480-480Zm0 280q-116 0-198-82t-82-198q0-116 82-198t198-82q116 0 198 82t82 198q0 116-82 198t-198 82Zm0-80q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Z" />
                                     </svg>
                                     <span>C</span>
-                                    <span className="ml-2">at {getCityName(destination)}</span>
+                                    <span className="ml-2">at {getStationNameByCode(to).toLocaleUpperCase()}</span>
                                 </span>
                                 <span className="border w-0 h-4"></span>
                                 <span className="ml-3 flex items-center">
