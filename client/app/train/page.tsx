@@ -1,5 +1,5 @@
 "use client";
-
+import { useAuthState } from "react-firebase-hooks/auth";
 import { Input, Spinner } from "@nextui-org/react";
 import React, { lazy, Suspense, useCallback, useState } from "react";
 import { Checkbox } from "@nextui-org/react";
@@ -12,9 +12,9 @@ import { useRouter } from "next/navigation";
 import stationData from "@/data/stationcode.json";
 import { TrainCards, words } from "@/components/skeleton"
 import NextTopLoader from 'nextjs-toploader';
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 const TrainComponent = lazy(() => import("@/components/ui/historytable"))
 import "../globals.css"
+import { auth } from "@/lib/firebase/config";
 
 
 interface Station {
@@ -27,8 +27,8 @@ interface StationData {
 }
 
 export default function TrainPage() {
-  const { user } = useKindeBrowserClient();
   const router = useRouter();
+  const [user] = useAuthState(auth);
   const [showLoadingBtn, setShowLoadingBtn] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
   const [toInputValue, setToInputValue] = useState<string>("");
@@ -73,7 +73,7 @@ export default function TrainPage() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          id: user?.id,
+          id: user?.uid,
           from: fromStation,
           to: toStation,
         })

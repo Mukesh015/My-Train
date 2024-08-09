@@ -23,7 +23,6 @@ export default function Navbar() {
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const sidebarRef = useRef<HTMLDivElement>(null);
-    const [currentUrl, setCurrentUrl] = useState<string>('');
 
     const closeDropdown = () => {
         setShowDropdown(false);
@@ -45,11 +44,6 @@ export default function Navbar() {
         try {
             const res = await signOut();
             console.log(res);
-            if (res) {
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000);
-            }
         } catch (error) {
             console.log("firebase error", error);
         }
@@ -129,11 +123,10 @@ export default function Navbar() {
 
     return (
         <>
-            <LoginForm visible={isloggedin} />
+            {!isloggedin && <LoginForm />}
             <nav id="navbar" className="fixed w-screen top-0 opacity-100 z-30 font-Montserrat">
                 <div className="flex items-center justify-between pl-4 md:pl-10 p-3">
                     <div className="flex items-center justify-center">
-                        {/* <img className="rounded-full" height={50} width={50} src={logo} alt="Logo" /> */}
                         <Image
                             className="rounded-full"
                             src={logo}
@@ -141,7 +134,7 @@ export default function Navbar() {
                             height={40}
                             alt="Logo"
                         />
-                        <p className="font-bold ml-5 text-xl">TOURISM</p>
+                        <p className="font-bold ml-5 text-white text-xl">TOURISM</p>
                     </div>
                     <ul className="hidden md:flex md:mr-20 md:ml-40 space-x-5">
                         <li onClick={() => router.push("/")} className="text-rose-500 cursor-pointer">
@@ -229,7 +222,7 @@ export default function Navbar() {
 
                 {/* Mobile menu */}
                 {showMobileMenu && (
-                    <div id="sidebar" ref={sidebarRef} className="md:hidden bg-[#000435]  backdrop-blur-md transition-transform duration-400 ease-in-out fixed right-0 top-0 h-screen border w-[18rem]">
+                    <div id="sidebar" ref={sidebarRef} className="md:hidden bg-[#000435] text-slate-500  backdrop-blur-md transition-transform duration-400 ease-in-out fixed right-0 top-0 h-screen border w-[18rem]">
                         <svg onClick={() => closeSidebar()} className="p-1 right-1 fixed mt-2" xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#e8eaed"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
                         <ul className="pt-20 pl-5 space-y-14 text-rose">
                             <li className="flex space-x-3 p-2">
@@ -237,7 +230,6 @@ export default function Navbar() {
                                     <p className="flex space-x-3">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FF1D8D"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z" /></svg>
                                         <span>{name}</span>
-                                        {/* Logout banate hobek */}
                                     </p>
                                 ) : (
                                     <p id="login" className="flex space-x-3 justify-center items-center">
@@ -266,7 +258,7 @@ export default function Navbar() {
                             </li>
                             <li onClick={() => handleLogout()} id="logout">
                                 {isloggedin &&
-                                    <Button className=" cursor-pointer flex space-x-3" color="danger" radius="md">
+                                    <Button onClick={()=>handleLogout()} className=" cursor-pointer flex space-x-3" color="danger" radius="md">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" /></svg>
                                         Logout
                                     </Button>

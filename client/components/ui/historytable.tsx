@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useAuthState } from "react-firebase-hooks/auth";
 import moment from "moment";
+import { auth } from "@/lib/firebase/config";
 
 export default function HistoryTable() {
-    const { user } = useKindeBrowserClient();
+    const [user] = useAuthState(auth);
     const [userId, setUserId] = useState<string>("");
     const [historyData, setHistoryData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -40,7 +41,7 @@ export default function HistoryTable() {
 
     useEffect(() => {
         if (user) {
-            setUserId(user.id);
+            setUserId(user.uid);
             handleFetchData();
         }
     }, [user, setUserId, handleFetchData]);
