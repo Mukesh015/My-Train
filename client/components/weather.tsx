@@ -92,7 +92,8 @@ const WeatherDetails: React.FC<Props> = () => {
     );
 
     const getWeatherAnimation = (weatherDescription: string) => {
-        switch (weatherDescription.toLowerCase()) {
+        console.log(weatherDescription);
+        switch (weatherDescription) {
             case "Clear":
                 return sunny;
             case "Clouds":
