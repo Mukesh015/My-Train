@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { useState } from "react";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase/config";
 import { Spinner } from "@nextui-org/react";

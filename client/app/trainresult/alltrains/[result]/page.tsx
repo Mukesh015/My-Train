@@ -121,7 +121,7 @@ const TrainResult = () => {
         } catch (error) {
             console.error("Fetch failed", error);
         }
-    }, [from, to, setTrainResult, setShowNoTrain, setIsLoading]);
+    }, [from, to, setTrainResult, setShowNoTrain, setIsLoading, date]);
 
     const handleGetTrainRoute = useCallback(
         async (train_no: any, train_name: any) => {
@@ -148,7 +148,7 @@ const TrainResult = () => {
                 handleDataSendForTrainHistory(train_no, train_name);
             }
         },
-        [setTrainRoute, handleDataSendForTrainHistory]
+        [setTrainRoute, handleDataSendForTrainHistory, onOpen]
     );
 
     const handleFetchLivedata = async (train_no: any, train_name: any) => {
@@ -194,7 +194,7 @@ const TrainResult = () => {
 
     useEffect(() => {
         handleSearchTrain();
-    }, [from, to, setTrainResult]);
+    }, [from, to, setTrainResult, handleSearchTrain]);
 
     return (
         <>

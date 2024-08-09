@@ -1,12 +1,12 @@
 "use client"
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase/config";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Button } from "@nextui-org/react";
 import logo from "@/public/logo.jpeg"
 import Image from 'next/image'
-import LoginForm from "./loginform";
+const LoginForm = lazy(() => import("./loginform"))
 
 export default function Navbar() {
 
@@ -24,13 +24,13 @@ export default function Navbar() {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const sidebarRef = useRef<HTMLDivElement>(null);
 
-    const closeDropdown = () => {
+    const closeDropdown = useCallback(() => {
         setShowDropdown(false);
-    };
+    }, []);
 
-    const closeSidebar = () => {
+    const closeSidebar = useCallback(() => {
         setShowMobileMenu(false);
-    }
+    }, []);
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
@@ -79,7 +79,6 @@ export default function Navbar() {
             setName(`${user.displayName}`)
             setEmail(`${user.email}`)
             setUserId(`${user.uid}`);
-            console.log(name, email, userId);
             setisLoggedin(true)
         } else {
             setisLoggedin(false)
@@ -123,7 +122,7 @@ export default function Navbar() {
 
     return (
         <>
-            {!isloggedin && <LoginForm />}
+            <Suspense>{!isloggedin && <LoginForm />}</Suspense>
             <nav id="navbar" className="fixed w-screen top-0 opacity-100 z-30 font-Montserrat">
                 <div className="flex items-center justify-between pl-4 md:pl-10 p-3">
                     <div className="flex items-center justify-center">
@@ -258,7 +257,7 @@ export default function Navbar() {
                             </li>
                             <li onClick={() => handleLogout()} id="logout">
                                 {isloggedin &&
-                                    <Button onClick={()=>handleLogout()} className=" cursor-pointer flex space-x-3" color="danger" radius="md">
+                                    <Button onClick={() => handleLogout()} className=" cursor-pointer flex space-x-3" color="danger" radius="md">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" /></svg>
                                         Logout
                                     </Button>

@@ -1,7 +1,7 @@
 "use client";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Input, Spinner } from "@nextui-org/react";
-import React, { lazy, Suspense, useCallback, useState } from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Checkbox } from "@nextui-org/react";
 import { DatePicker } from "@nextui-org/react";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
@@ -87,7 +87,12 @@ export default function TrainPage() {
     } catch (e) {
       console.error("Fetch errror", e);
     }
-  }, [user, fromStation, toStation]);
+  }, [user, fromStation, toStation, date, router]);
+
+  function getStationNameByCode(stationCode: string) {
+    const station = stationData.data.find((entry) => entry.code === stationCode);
+    return station ? station.name : `Station code '${stationCode}' not found`;
+  }
 
   const handleFromSuggestionClick = (suggestion: Station): void => {
     setInputValue(`${suggestion.name} (${suggestion.code})`);
@@ -148,6 +153,34 @@ export default function TrainPage() {
     setToInputValue(inputValue);
   }
 
+  const getRecentSearches = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/auth/user/${user?.uid}/history`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        console.error("Server responded with a bad response");
+        return;
+      }
+
+      const data = await response.json();
+      setInputValue(`${getStationNameByCode(data.data.searchHistory[0].from)} (${data.data.searchHistory[0].from})`);
+      setToInputValue(`${getStationNameByCode(data.data.searchHistory[0].to)} (${data.data.searchHistory[0].to})`);
+      setFromStation(data.data.searchHistory[0].from);
+      setToStation(data.data.searchHistory[0].to);
+
+    } catch (e) {
+      console.log("Fetch failed", e);
+    }
+  }, [user, setInputValue, setToInputValue]);
+
+  useEffect(() => {
+    getRecentSearches();
+  }, [getRecentSearches])
 
   return (
     <>
