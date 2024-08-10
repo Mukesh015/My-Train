@@ -80,12 +80,16 @@ const WeatherDetails: React.FC<Props> = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setDestinationWeatherData(data);
+                    return true;
+
                 } else {
                     console.error("Server responded with a bad response");
                     console.log(response);
+                    return false;
                 }
             } catch (e) {
                 console.error("Fetch failed for destination city", e);
+                return false;
             }
         },
         [setDestinationWeatherData, date, to]
@@ -111,10 +115,17 @@ const WeatherDetails: React.FC<Props> = () => {
         }
     };
 
-    useEffect(() => {
-        handleFetchWeatherOfSourceCity();
-        handleFetchWeatherOfDestinationCity();
+    const handleFetchWeathers = useCallback(async () => {
+        const res = await handleFetchWeatherOfDestinationCity();
+        console.log(res);
+        if (res) {
+            handleFetchWeatherOfSourceCity();
+        }
     }, [handleFetchWeatherOfSourceCity, handleFetchWeatherOfDestinationCity])
+
+    useEffect(() => {
+        handleFetchWeathers()
+    }, [handleFetchWeathers])
 
     return (
         <>

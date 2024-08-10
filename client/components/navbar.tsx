@@ -3,10 +3,10 @@ import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase/config";
 import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Button } from "@nextui-org/react";
 import logo from "@/public/logo.jpeg"
 import Image from 'next/image'
 const LoginForm = lazy(() => import("./loginform"))
+import MobileMenu from "./ui/mobilemenu";
 
 export default function Navbar() {
 
@@ -196,76 +196,48 @@ export default function Navbar() {
                     </div>
 
                     {/* Hamburger menu button */}
-                    <div className="md:hidden flex items-center">
+                    <div className="md:hidden items-center">
                         <button
-                            className="text-white focus:outline-none"
-                            onClick={toggleMobileMenu}
+                            className="text-white transition-transform ease-in-out duration-250 focus:outline-none"
                         >
-                            <svg
-                                className="w-6 h-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M4 6h16M4 12h16m-7 6h7"
-                                />
-                            </svg>
+                            {showMobileMenu ? (
+
+                                <svg
+                                    onClick={() => closeSidebar()}
+                                    className="mt-2 w-6 h-6 transition-all duration-300  ease-in-out"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 -960 960 960"
+                                    fill="#e8eaed">
+                                    <path
+                                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+                                    />
+                                </svg>
+                            ) : (
+                                <svg
+                                    onClick={toggleMobileMenu}
+                                    className="w-6 h-6"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M4 6h16M4 12h16m-7 6h7"
+                                    />
+                                </svg>
+                            )}
                         </button>
                     </div>
                 </div>
 
                 {/* Mobile menu */}
                 {showMobileMenu && (
-                    <div id="sidebar" ref={sidebarRef} className="md:hidden bg-[#000435] text-slate-500  backdrop-blur-md transition-transform duration-400 ease-in-out fixed right-0 top-0 h-screen border w-[18rem]">
-                        <svg onClick={() => closeSidebar()} className="p-1 right-1 fixed mt-2" xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#e8eaed"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
-                        <ul className="pt-20 pl-5 space-y-14 text-rose">
-                            <li className="flex space-x-3 p-2">
-                                {isloggedin ? (
-                                    <p className="flex space-x-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FF1D8D"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z" /></svg>
-                                        <span>{name}</span>
-                                    </p>
-                                ) : (
-                                    <p id="login" className="flex space-x-3 justify-center items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FF1D8D"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z" /></svg>
-                                        <Button radius="md">Login</Button>
-                                    </p>
-                                )}
-                            </li>
-                            <li onClick={() => router.push("/")} className="flex space-x-3 hover:bg-slate-600 p-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FF1D8D"><path d="M160-120v-480l320-240 320 240v480H560v-280H400v280H160Z" /></svg>
-                                <p className="text-lg">
-                                    Home
-                                </p>
-                            </li>
-                            <li onClick={() => router.push("/train")} className="flex space-x-3 hover:bg-slate-600 p-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FF1D8D"><path d="M160-340v-380q0-53 27.5-84.5t72.5-48q45-16.5 102.5-22T480-880q66 0 124.5 5.5t102 22q43.5 16.5 68.5 48t25 84.5v380q0 59-40.5 99.5T660-200l60 60v20h-80l-80-80H400l-80 80h-80v-20l60-60q-59 0-99.5-40.5T160-340Zm80-220h200v-120H240v120Zm280 0h200v-120H520v120ZM340-320q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm280 0q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Z" /></svg>
-                                <p className="text-lg">
-                                    Train
-                                </p>
-                            </li>
-                            <li onClick={() => router.push("/flight")} className="flex space-x-3 hover:bg-slate-600 p-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FF1D8D"><path d="M280-80v-100l120-84v-144L80-280v-120l320-224v-176q0-33 23.5-56.5T480-880q33 0 56.5 23.5T560-800v176l320 224v120L560-408v144l120 84v100l-200-60-200 60Z" /></svg>
-                                <p className="text-lg">
-                                    Flight
-                                </p>
-                            </li>
-                            <li onClick={() => handleLogout()} id="logout">
-                                {isloggedin &&
-                                    <Button onClick={() => handleLogout()} className=" cursor-pointer flex space-x-3" color="danger" radius="md">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" /></svg>
-                                        Logout
-                                    </Button>
-                                }
-                            </li>
-                        </ul>
-                    </div>
+                    <MobileMenu name={name} isloggedin={isloggedin} sidebarRef={sidebarRef} />
                 )}
+
             </nav>
         </>
     )
