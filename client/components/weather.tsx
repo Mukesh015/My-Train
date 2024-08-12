@@ -4,10 +4,10 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import sunny from "../lottie/Animation - 1722963756766.json";
 import cloudy from "../lottie/Animation - 1722963832258.json";
 import thunder from "../lottie/Animation - 1722964227245.json";
-import rainy from "../lottie/Animation - 1723049582065.json"
-import snow from "../lottie/Animation - 1723050322900.json"
-import notSure from "../lottie/Animation - 1723050817681.json"
-import stationData from "@/data/stationcode.json"
+import rainy from "../lottie/Animation - 1723049582065.json";
+import snow from "../lottie/Animation - 1723050322900.json";
+import notSure from "../lottie/Animation - 1723050817681.json";
+import stationData from "@/data/stationcode.json";
 import { useSearchParams } from "next/navigation";
 
 interface WeatherData {
@@ -22,7 +22,6 @@ interface Props {
 }
 
 const WeatherDetails: React.FC<Props> = () => {
-
     const searchParams = useSearchParams();
     const from: string = searchParams.get("from") || "";
     const to: string = searchParams.get("to") || "";
@@ -38,7 +37,6 @@ const WeatherDetails: React.FC<Props> = () => {
     const handleFetchWeatherOfSourceCity = useCallback(
         async () => {
             const sourceCity = getStationNameByCode(from).toLowerCase();
-            console.log(sourceCity);
             try {
                 const response = await fetch(
                     `https://my-tour-api.vercel.app/weather/weather/?city=${sourceCity}&date=${date}`,
@@ -66,7 +64,6 @@ const WeatherDetails: React.FC<Props> = () => {
     const handleFetchWeatherOfDestinationCity = useCallback(
         async () => {
             const destinationCity = getStationNameByCode(to).toLowerCase();
-            console.log(destinationCity);
             try {
                 const response = await fetch(
                     `https://my-tour-api.vercel.app/weather/weather/?city=${destinationCity}&date=${date}`,
@@ -107,9 +104,9 @@ const WeatherDetails: React.FC<Props> = () => {
             case "Thunderstorm":
                 return thunder;
             case "Rain":
-                return rainy
+                return rainy;
             case "Drizzle":
-                return rainy
+                return rainy;
             default:
                 return notSure;
         }
@@ -121,27 +118,27 @@ const WeatherDetails: React.FC<Props> = () => {
         if (res) {
             handleFetchWeatherOfSourceCity();
         }
-    }, [handleFetchWeatherOfSourceCity, handleFetchWeatherOfDestinationCity])
+    }, [handleFetchWeatherOfSourceCity, handleFetchWeatherOfDestinationCity]);
 
     useEffect(() => {
-        handleFetchWeathers()
-    }, [handleFetchWeathers])
+        handleFetchWeathers();
+    }, [handleFetchWeathers]);
 
     return (
         <>
-            <div className="flex justify-between">
-                <section className="flex items-center space-x-2">
+            <div className="flex flex-col sm:flex-row justify-between sm:space-x-4">
+                <section className="flex items-center space-x-2 sm:space-x-4">
                     {sourceWeatherData && (
                         <>
                             <Lottie
-                                className="h-10"
+                                className="h-16 sm:h-10"
                                 animationData={getWeatherAnimation(sourceWeatherData.WeatherDescription)}
                             />
-                            <p className="flex items-center space-x-3">
+                            <p className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 space-x-0 sm:space-x-3">
                                 <span className="flex items-center">
                                     <span>{sourceWeatherData.Temprature}</span>
                                     <svg
-                                        className="mb-4"
+                                        className="mb-1 sm:mb-4"
                                         xmlns="http://www.w3.org/2000/svg"
                                         height="10px"
                                         viewBox="0 -960 960 960"
@@ -153,13 +150,13 @@ const WeatherDetails: React.FC<Props> = () => {
                                     <span>C</span>
                                     <span className="ml-2">at {getStationNameByCode(from).toLocaleUpperCase()}</span>
                                 </span>
-                                <span className="border w-0 h-4"></span>
-                                <span className="ml-3 flex items-center">
+                                <span className="border sm:w-0 sm:h-4 w-full h-0"></span>
+                                <span className="ml-0 sm:ml-3 flex items-center">
                                     <span>Real feel</span>
-                                    <span className="border h-0 w-3 ml-2 flex"></span>
+                                    <span className="border h-0 sm:w-3 sm:ml-2 flex"></span>
                                     <span className="ml-2">{sourceWeatherData.feelsLike}</span>
                                     <svg
-                                        className="mb-4"
+                                        className="mb-1 sm:mb-4"
                                         xmlns="http://www.w3.org/2000/svg"
                                         height="10px"
                                         viewBox="0 -960 960 960"
@@ -170,28 +167,28 @@ const WeatherDetails: React.FC<Props> = () => {
                                     </svg>
                                     <span>C</span>
                                 </span>
-                                <span className="border w-0 h-4"></span>
-                                <span className="flex items-center ml-3">
+                                <span className="border sm:w-0 sm:h-4 w-full h-0"></span>
+                                <span className="flex items-center ml-0 sm:ml-3">
                                     <span>Humidity</span>
-                                    <span className="border h-0 w-3 ml-2 flex"></span>
+                                    <span className="border h-0 sm:w-3 sm:ml-2 flex"></span>
                                     <span className="ml-2">{sourceWeatherData.humidity} %</span>
                                 </span>
                             </p>
                         </>
                     )}
                 </section>
-                <section className="flex items-center space-x-2">
+                <section className="flex items-center space-x-2 sm:space-x-4 mt-4 sm:mt-0">
                     {destinationWeatherData && (
                         <>
                             <Lottie
-                                className="h-10"
+                                className="h-16 sm:h-10"
                                 animationData={getWeatherAnimation(destinationWeatherData.WeatherDescription)}
                             />
-                            <p className="flex items-center space-x-3">
+                            <p className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 space-x-0 sm:space-x-3">
                                 <span className="flex items-center">
                                     <span>{destinationWeatherData.Temprature}</span>
                                     <svg
-                                        className="mb-4"
+                                        className="mb-1 sm:mb-4"
                                         xmlns="http://www.w3.org/2000/svg"
                                         height="10px"
                                         viewBox="0 -960 960 960"
@@ -203,13 +200,13 @@ const WeatherDetails: React.FC<Props> = () => {
                                     <span>C</span>
                                     <span className="ml-2">at {getStationNameByCode(to).toLocaleUpperCase()}</span>
                                 </span>
-                                <span className="border w-0 h-4"></span>
-                                <span className="ml-3 flex items-center">
+                                <span className="border sm:w-0 sm:h-4 w-full h-0"></span>
+                                <span className="ml-0 sm:ml-3 flex items-center">
                                     <span>Real feel</span>
-                                    <span className="border h-0 w-3 ml-2 flex"></span>
+                                    <span className="border h-0 sm:w-3 sm:ml-2 flex"></span>
                                     <span className="ml-2">{destinationWeatherData.feelsLike}</span>
                                     <svg
-                                        className="mb-4"
+                                        className="mb-1 sm:mb-4"
                                         xmlns="http://www.w3.org/2000/svg"
                                         height="10px"
                                         viewBox="0 -960 960 960"
@@ -220,10 +217,10 @@ const WeatherDetails: React.FC<Props> = () => {
                                     </svg>
                                     <span>C</span>
                                 </span>
-                                <span className="border w-0 h-4"></span>
-                                <span className="flex items-center ml-3">
+                                <span className="border sm:w-0 sm:h-4 w-full h-0"></span>
+                                <span className="flex items-center ml-0 sm:ml-3">
                                     <span>Humidity</span>
-                                    <span className="border h-0 w-3 ml-2 flex"></span>
+                                    <span className="border h-0 sm:w-3 sm:ml-2 flex"></span>
                                     <span className="ml-2">{destinationWeatherData.humidity} %</span>
                                 </span>
                             </p>
