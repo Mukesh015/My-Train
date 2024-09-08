@@ -21,7 +21,7 @@ const LoginForm: React.FC = () => {
             <div className="w-[22rem] md:w-full font-Montserrat text-white  fixed right-4 z-50 top-20 bg-gray-900 max-w-sm p-4 border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <section className="flex justify-between mb-5">
                     <h1 className="font-bold text-xl">Login into our platform</h1>
-                    <svg onClick={() => setShowForm(true)} className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
+                    <svg onClick={() => setShowForm(false)} className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
                 </section>
                 <p className="border border-gray-700 w-full mb-5 h-0"></p>
                 <button

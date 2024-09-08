@@ -113,6 +113,7 @@ const TrainResult = () => {
                             convertTimeToNumber(b.train_base.from_time)
                     );
                     setTrainResult(sortedTrains);
+                    console.log(data);
                 } else {
                     setShowNoTrain(true);
                 }

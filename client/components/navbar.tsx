@@ -256,7 +256,7 @@ const Navbar = () => {
 
                 {/* Mobile menu */}
                 {showMobileMenu && (
-                    <MobileMenu name={name} isloggedin={isloggedin} />
+                    <MobileMenu name={name} isloggedin={isloggedin} toggleMenu={toggleMobileMenu} />
                 )}
 
             </nav>
